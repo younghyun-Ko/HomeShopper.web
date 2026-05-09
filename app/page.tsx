@@ -36,6 +36,9 @@ import {
   Send,
   ArrowRight,
   CircleCheck,
+  Scale,
+  TriangleAlert,
+  type LucideIcon,
 } from "lucide-react";
 
 const QUICK_ACCESS_LINKS = [
@@ -220,44 +223,212 @@ function ServiceFlowSection() {
 /* ═══════════════════════════════════════════════
  * B2C-S04: AI 안심 분석 데모 (Fake)
  * ═══════════════════════════════════════════════ */
-interface SampleProperty { id: string; name: string; icon: typeof Building2; address: string; result: string; }
+type AnalysisStatus = "safe" | "caution" | "danger";
+
+interface AnalysisItem {
+  label: string;
+  value: string;
+  status: AnalysisStatus;
+  detail: string;
+  icon: LucideIcon;
+}
+
+interface SampleProperty {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  address: string;
+  score: number;
+  verdict: string;
+  verdictStatus: AnalysisStatus;
+  summary: string;
+  recommendation: string;
+  items: AnalysisItem[];
+}
+
+const STATUS_META: Record<AnalysisStatus, { label: string; badge: string; icon: LucideIcon; iconClass: string; tone: string }> = {
+  safe: {
+    label: "안전",
+    badge: "border-green-200 bg-green-50 text-green-700",
+    icon: CircleCheck,
+    iconClass: "bg-green-50 text-green-600",
+    tone: "text-green-600",
+  },
+  caution: {
+    label: "주의",
+    badge: "border-amber-200 bg-amber-50 text-amber-700",
+    icon: TriangleAlert,
+    iconClass: "bg-amber-50 text-amber-600",
+    tone: "text-amber-600",
+  },
+  danger: {
+    label: "위험",
+    badge: "border-red-200 bg-red-50 text-red-700",
+    icon: X,
+    iconClass: "bg-red-50 text-red-600",
+    tone: "text-red-600",
+  },
+};
 
 const SAMPLE_PROPERTIES: SampleProperty[] = [
-  { id: "a", name: "A 상가", icon: Building2, address: "전주시 덕진구 금암동 127-3",
-    result: `🔍 등기부등본 및 건축물대장 분석 중...\n\n━━━ 권리관계 분석 결과 ━━━\n\n- 근저당권 설정: 없음 (안전)\n- 가압류/가처분: 해당 사항 없음 (안전)\n- 위반건축물 여부: 해당 사항 없음 (안전)\n- 상가건물 임대차보호법 적용 범위: 확인 완료\n- 실거래가 대비 호가 적정성: 적정 범위 내\n\n✅ 최종 안심 점수: 98점 / 100점\n→ 계약 진행을 권장합니다.` },
-  { id: "b", name: "B 빌딩", icon: Landmark, address: "서울시 강남구 역삼동 823-1",
-    result: `🔍 등기부등본 및 건축물대장 분석 중...\n\n━━━ 권리관계 분석 결과 ━━━\n\n- 근저당권 설정: 1건 (국민은행, 3억 원)\n  ⚠️ 매도 시 말소 조건 확인 필요\n- 가압류/가처분: 해당 사항 없음 (안전)\n- 위반건축물 여부: 해당 사항 없음 (안전)\n- 임대차 현황: 기존 임차인 2건 확인\n- 실거래가 대비 호가 적정성: 소폭 상회\n\n⚠️ 최종 안심 점수: 82점 / 100점\n→ 근저당 말소 조건 확인 후 진행을 권장합니다.` },
-  { id: "c", name: "C 메디컬타워", icon: Hospital, address: "전주시 완산구 서신동 891-5",
-    result: `🔍 등기부등본 및 건축물대장 분석 중...\n\n━━━ 권리관계 분석 결과 ━━━\n\n- 근저당권 설정: 없음 (안전)\n- 가압류/가처분: 해당 사항 없음 (안전)\n- 위반건축물 여부: 해당 사항 없음 (안전)\n- 의료법 시설 기준 적합 여부: 적합\n- 주차장 확보 비율: 법정 기준 충족\n- 실거래가 대비 호가 적정성: 적정 범위 내\n\n✅ 최종 안심 점수: 95점 / 100점\n→ 개원 용도로 적합하며, 계약 진행을 권장합니다.` },
+  {
+    id: "a",
+    name: "A 상가",
+    icon: Building2,
+    address: "전주시 덕진구 금암동 127-3",
+    score: 98,
+    verdict: "계약 진행 권장",
+    verdictStatus: "safe",
+    summary: "권리관계와 임대차 리스크가 낮고 호가도 적정 범위로 확인되었습니다.",
+    recommendation: "현재 조건 기준으로 계약 검토를 진행해도 좋은 매물입니다.",
+    items: [
+      { label: "근저당권", value: "설정 없음", status: "safe", detail: "등기부상 선순위 담보권이 확인되지 않습니다.", icon: ShieldCheck },
+      { label: "가압류/가처분", value: "해당 없음", status: "safe", detail: "권리 제한 사항이 없어 소유권 이전 리스크가 낮습니다.", icon: Scale },
+      { label: "위반건축물", value: "해당 없음", status: "safe", detail: "건축물대장 기준 위반 항목이 확인되지 않습니다.", icon: Building2 },
+      { label: "호가 적정성", value: "적정 범위", status: "safe", detail: "주변 실거래가와 임대 시세 대비 무리 없는 수준입니다.", icon: Banknote },
+    ],
+  },
+  {
+    id: "b",
+    name: "B 빌딩",
+    icon: Landmark,
+    address: "서울시 강남구 역삼동 823-1",
+    score: 82,
+    verdict: "조건부 진행",
+    verdictStatus: "caution",
+    summary: "주요 권리 제한은 낮지만 선순위 근저당 말소 조건 확인이 필요합니다.",
+    recommendation: "계약 전 말소 특약과 잔금일 처리 조건을 중개사와 재확인하세요.",
+    items: [
+      { label: "근저당권", value: "1건 확인", status: "caution", detail: "국민은행 3억 원 설정 건이 있어 매도 시 말소 조건 확인이 필요합니다.", icon: ShieldCheck },
+      { label: "가압류/가처분", value: "해당 없음", status: "safe", detail: "권리 제한 사항은 별도로 확인되지 않습니다.", icon: Scale },
+      { label: "기존 임차인", value: "2건 확인", status: "caution", detail: "인도 가능 시점과 기존 임대차 승계 여부를 확인해야 합니다.", icon: FileSignature },
+      { label: "호가 적정성", value: "소폭 상회", status: "caution", detail: "비교 매물 대비 호가가 약간 높아 협상 여지가 있습니다.", icon: Banknote },
+    ],
+  },
+  {
+    id: "c",
+    name: "C 메디컬타워",
+    icon: Hospital,
+    address: "전주시 완산구 서신동 891-5",
+    score: 95,
+    verdict: "개원 적합",
+    verdictStatus: "safe",
+    summary: "의료시설 기준과 주차 조건이 양호하며 권리관계도 안정적입니다.",
+    recommendation: "진료과별 인테리어 동선과 관리비 조건을 추가 검토하면 좋습니다.",
+    items: [
+      { label: "근저당권", value: "설정 없음", status: "safe", detail: "선순위 담보권 없이 안정적인 권리 상태입니다.", icon: ShieldCheck },
+      { label: "의료시설 기준", value: "적합", status: "safe", detail: "개원 용도에 필요한 기본 시설 기준을 충족합니다.", icon: Stethoscope },
+      { label: "주차 확보", value: "기준 충족", status: "safe", detail: "법정 기준에 맞는 주차 여건이 확인되었습니다.", icon: MapPin },
+      { label: "호가 적정성", value: "적정 범위", status: "safe", detail: "유사 메디컬 빌딩 임대 조건과 비교해 안정적입니다.", icon: Banknote },
+    ],
+  },
 ];
+
+function StatusBadge({ status }: { status: AnalysisStatus }) {
+  const meta = STATUS_META[status];
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-bold ${meta.badge}`}>
+      {meta.label}
+    </span>
+  );
+}
+
+function ScoreGauge({ score, status }: { score: number; status: AnalysisStatus }) {
+  const color = status === "safe" ? "#16A34A" : status === "caution" ? "#D4A853" : "#DC2626";
+
+  return (
+    <div
+      className="relative flex h-32 w-32 shrink-0 items-center justify-center rounded-full"
+      style={{ background: `conic-gradient(${color} ${score * 3.6}deg, #E5E7EB 0deg)` }}
+      aria-label={`안심 점수 ${score}점`}
+    >
+      <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full bg-white shadow-inner">
+        <span className="text-3xl font-extrabold text-primary">{score}</span>
+        <span className="mt-0.5 text-[11px] font-bold text-text-muted">안심 점수</span>
+      </div>
+    </div>
+  );
+}
+
+function AnalysisResultDashboard({ property }: { property: SampleProperty }) {
+  const verdictMeta = STATUS_META[property.verdictStatus];
+  const VerdictIcon = verdictMeta.icon;
+
+  return (
+    <div className="border-t border-primary/10 bg-white p-5 sm:p-6">
+      <div className="grid gap-5 lg:grid-cols-[auto_1fr] lg:items-center">
+        <div className="flex justify-center">
+          <ScoreGauge score={property.score} status={property.verdictStatus} />
+        </div>
+        <div className="rounded-2xl border border-primary/10 bg-background p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${verdictMeta.iconClass}`}>
+              <VerdictIcon className="h-5 w-5" strokeWidth={1.8} />
+            </span>
+            <StatusBadge status={property.verdictStatus} />
+            <p className="text-lg font-extrabold text-primary">{property.verdict}</p>
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-text-muted">{property.summary}</p>
+          <p className={`mt-3 text-sm font-bold ${verdictMeta.tone}`}>{property.recommendation}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        {property.items.map((item) => {
+          const ItemIcon = item.icon;
+          const itemMeta = STATUS_META[item.status];
+
+          return (
+            <div key={item.label} className="rounded-2xl border border-primary/10 bg-white p-4 shadow-sm shadow-primary/5">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${itemMeta.iconClass}`}>
+                    <ItemIcon className="h-5 w-5" strokeWidth={1.8} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-primary">{item.label}</p>
+                    <p className="mt-0.5 text-xs font-semibold text-text-muted">{item.value}</p>
+                  </div>
+                </div>
+                <StatusBadge status={item.status} />
+              </div>
+              <p className="mt-3 text-xs leading-relaxed text-text-muted">{item.detail}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 text-center">
+        <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">
+          <Sparkles className="h-4 w-4" />
+          내 매물도 분석받기
+        </a>
+        <p className="mt-2 text-xs text-text-muted">상담을 신청하시면 실제 매물에 대한 분석을 무료로 제공해 드립니다</p>
+      </div>
+    </div>
+  );
+}
 
 function AiDemoSection() {
   const [selected, setSelected] = useState("a");
-  const [phase, setPhase] = useState<"idle" | "loading" | "typing" | "done">("idle");
-  const [displayed, setDisplayed] = useState("");
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState<"idle" | "loading" | "done">("idle");
+  const analysisTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const current = SAMPLE_PROPERTIES.find((p) => p.id === selected)!;
 
-  useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
+  useEffect(() => () => {
+    if (analysisTimer.current) clearTimeout(analysisTimer.current);
+  }, []);
 
   function handleAnalyze() {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setDisplayed(""); setPhase("loading");
-    setTimeout(() => {
-      setPhase("typing");
-      const full = current.result; let idx = 0;
-      intervalRef.current = setInterval(() => {
-        idx++; setDisplayed(full.slice(0, idx));
-        if (resultRef.current) resultRef.current.scrollTop = resultRef.current.scrollHeight;
-        if (idx >= full.length) { if (intervalRef.current) clearInterval(intervalRef.current); setPhase("done"); }
-      }, 18);
-    }, 1200);
+    if (analysisTimer.current) clearTimeout(analysisTimer.current);
+    setPhase("loading");
+    analysisTimer.current = setTimeout(() => setPhase("done"), 900);
   }
 
   function handleSelect(id: string) {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setSelected(id); setPhase("idle"); setDisplayed("");
+    if (analysisTimer.current) clearTimeout(analysisTimer.current);
+    setSelected(id);
+    setPhase("idle");
   }
 
   return (
@@ -270,31 +441,74 @@ function AiDemoSection() {
           <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">권리관계, AI가 먼저 확인합니다</h2>
           <p className="mt-3 text-sm text-text-muted sm:text-base">샘플 매물을 선택하고 분석 결과를 직접 확인해 보세요</p>
         </div>
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-primary/10 bg-background shadow-sm">
-          <div className="flex border-b border-primary/10">
-            {SAMPLE_PROPERTIES.map((p) => { const Icon = p.icon; const a = selected === p.id; return (
-              <button key={p.id} onClick={() => handleSelect(p.id)} className={`flex flex-1 items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold transition-colors ${a ? "border-b-2 border-accent bg-white text-primary" : "text-text-muted hover:bg-white/60 hover:text-primary"}`}>
-                <Icon className={`h-4 w-4 ${a ? "text-accent" : ""}`} /><span className="hidden sm:inline">{p.name}</span><span className="sm:hidden">{p.name.split(" ")[0]}</span>
-              </button>); })}
+
+        <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg shadow-primary/5">
+          <div className="grid border-b border-primary/10 bg-background sm:grid-cols-3">
+            {SAMPLE_PROPERTIES.map((property) => {
+              const Icon = property.icon;
+              const active = selected === property.id;
+
+              return (
+                <button
+                  key={property.id}
+                  onClick={() => handleSelect(property.id)}
+                  className={`flex min-h-16 items-center justify-center gap-2 border-b border-primary/10 px-4 py-4 text-sm font-bold transition-colors last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 ${
+                    active ? "bg-white text-primary shadow-sm" : "text-text-muted hover:bg-white/70 hover:text-primary"
+                  }`}
+                >
+                  <Icon className={`h-4 w-4 ${active ? "text-accent" : ""}`} strokeWidth={1.8} />
+                  <span>{property.name}</span>
+                </button>
+              );
+            })}
           </div>
-          <div className="flex flex-col items-start justify-between gap-4 border-b border-primary/10 bg-white px-6 py-4 sm:flex-row sm:items-center">
-            <div><p className="text-sm font-bold text-primary">{current.name}</p><p className="mt-0.5 text-xs text-text-muted">{current.address}</p></div>
-            <button onClick={handleAnalyze} disabled={phase === "loading" || phase === "typing"} className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50">
-              {phase === "loading" || phase === "typing" ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
-              {phase === "loading" ? "분석 준비 중..." : phase === "typing" ? "분석 중..." : "AI 권리 분석 시작"}
+
+          <div className="flex flex-col gap-4 border-b border-primary/10 bg-white px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-base font-extrabold text-primary">{current.name}</p>
+                <StatusBadge status={current.verdictStatus} />
+              </div>
+              <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-text-muted">
+                <MapPin className="h-3.5 w-3.5" />
+                {current.address}
+              </p>
+            </div>
+            <button
+              onClick={handleAnalyze}
+              disabled={phase === "loading"}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-md shadow-primary/10 transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {phase === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+              {phase === "loading" ? "분석 중..." : "AI 권리 분석 시작"}
             </button>
           </div>
-          <div ref={resultRef} className="h-72 overflow-y-auto bg-[#1a1a2e] p-6 font-mono text-sm leading-relaxed sm:h-80">
-            {phase === "idle" && <p className="text-gray-500">← 매물을 선택하고 <span className="text-gray-400">[AI 권리 분석 시작]</span> 버튼을 눌러보세요</p>}
-            {phase === "loading" && <div className="flex items-center gap-3 text-accent"><Loader2 className="h-5 w-5 animate-spin" /><span>데이터를 수집하고 있습니다...</span></div>}
-            {(phase === "typing" || phase === "done") && <pre className="whitespace-pre-wrap text-green-400">{displayed}{phase === "typing" && <span className="animate-pulse text-accent">▌</span>}</pre>}
-          </div>
-          {phase === "done" && (
-            <div className="border-t border-primary/10 bg-white px-6 py-5 text-center">
-              <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30"><Sparkles className="h-4 w-4" />내 매물도 분석받기</a>
-              <p className="mt-2 text-xs text-text-muted">상담을 신청하시면 실제 매물에 대한 분석을 무료로 제공해 드립니다</p>
+
+          {phase === "idle" && (
+            <div className="grid gap-5 bg-background p-6 text-center sm:p-8">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent">
+                <ShieldCheck className="h-7 w-7" strokeWidth={1.7} />
+              </div>
+              <div>
+                <p className="text-base font-extrabold text-primary">샘플 매물 리포트를 확인해 보세요</p>
+                <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-text-muted">
+                  등기부등본, 건축물대장, 임대 조건을 종합해 위험 신호를 카드 형태로 요약합니다.
+                </p>
+              </div>
             </div>
           )}
+
+          {phase === "loading" && (
+            <div className="flex min-h-80 items-center justify-center bg-background p-8">
+              <div className="text-center">
+                <Loader2 className="mx-auto h-8 w-8 animate-spin text-accent" />
+                <p className="mt-4 text-sm font-bold text-primary">권리관계와 임대 조건을 대조하고 있습니다</p>
+                <p className="mt-1 text-xs text-text-muted">잠시 후 신뢰도 리포트가 표시됩니다</p>
+              </div>
+            </div>
+          )}
+
+          {phase === "done" && <AnalysisResultDashboard property={current} />}
         </div>
         <SectionScrollIndicator href="#properties" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
