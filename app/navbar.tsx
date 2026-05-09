@@ -9,10 +9,11 @@ import type { AuthUser, UserRole } from "@/lib/auth-types";
 
 const NAV_LINKS = [
   { label: "서비스 소개", href: "/#service-intro", sectionId: "service-intro" },
-  { label: "매물 보기", href: "/offer", pathname: "/offer" },
   { label: "AI 분석", href: "/#ai-analysis", sectionId: "ai-analysis" },
   { label: "상담 신청", href: "/#contact", sectionId: "contact" },
 ] as const;
+
+const PROPERTY_LINK = { label: "매물 보기", href: "/offer", pathname: "/offer" } as const;
 
 function getMyPageHref(user: AuthUser) {
   return user.user_role === "AGENT" ? "/agent/dashboard" : "/mypage/offers";
@@ -300,10 +301,7 @@ export default function Navbar() {
           <div className="flex flex-1 items-center justify-end gap-5 overflow-x-auto">
             {NAV_LINKS.map((link) => {
               const isActive =
-                ("sectionId" in link &&
-                  pathname === "/" &&
-                  activeSection === link.sectionId) ||
-                ("pathname" in link && pathname === link.pathname);
+                pathname === "/" && activeSection === link.sectionId;
 
               return (
                 <Link
@@ -320,6 +318,18 @@ export default function Navbar() {
                 </Link>
               );
             })}
+
+            <Link
+              href={PROPERTY_LINK.href}
+              aria-current={pathname === PROPERTY_LINK.pathname ? "page" : undefined}
+              className={`shrink-0 text-sm transition-colors hover:text-primary ${
+                pathname === PROPERTY_LINK.pathname
+                  ? "font-bold text-accent underline decoration-2 underline-offset-8"
+                  : "font-medium text-text-muted"
+              }`}
+            >
+              {PROPERTY_LINK.label}
+            </Link>
 
             <button
               type="button"

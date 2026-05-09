@@ -46,6 +46,18 @@ const QUICK_ACCESS_LINKS = [
   { label: "제휴", href: "/partner", icon: Handshake, type: "page" },
 ] as const;
 
+function SectionScrollIndicator({ href, className = "" }: { href: string; className?: string }) {
+  return (
+    <a
+      href={href}
+      aria-label="다음 섹션으로 이동"
+      className={`flex h-10 w-10 items-center justify-center rounded-full border border-primary/10 bg-white/80 text-primary shadow-md shadow-primary/5 backdrop-blur-md transition-colors hover:bg-white hover:text-accent ${className}`}
+    >
+      <ChevronDown className="h-5 w-5 animate-gentle-bounce" strokeWidth={1.8} />
+    </a>
+  );
+}
+
 /* ═══════════════════════════════════════════════
  * B2C-S01: Hero 섹션
  * ═══════════════════════════════════════════════ */
@@ -53,14 +65,14 @@ function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[80vh] items-center justify-center overflow-hidden
+      className="relative flex min-h-[80vh] items-center justify-center overflow-hidden py-12 pb-20
                  bg-gradient-to-br from-background via-white to-primary/5"
     >
       <div className="pointer-events-none absolute -right-32 -top-32 h-[480px] w-[480px] rounded-full bg-accent/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-primary/5 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-content px-6 text-center">
-        <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
+        <div className="mb-5 flex flex-wrap items-center justify-center gap-3">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-primary backdrop-blur-sm">
             <BadgeCheck className="h-3.5 w-3.5 text-accent" />
             특허 출원 완료
@@ -79,7 +91,7 @@ function HeroSection() {
           안심하세요
         </h1>
 
-        <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-text-muted sm:text-lg">
+        <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-text-muted sm:text-lg">
           전속 중개 매칭 + 권리관계 AI 분석으로
           <br className="hidden sm:block" />
           중개 수수료를 대폭 절감하세요
@@ -87,14 +99,14 @@ function HeroSection() {
 
         <a
           href="#contact"
-          className="mt-10 inline-block rounded-xl bg-accent px-8 py-4 text-sm font-bold text-white shadow-lg shadow-accent/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent/30 active:translate-y-0 sm:text-base"
+          className="mt-7 inline-block rounded-xl bg-accent px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent/30 active:translate-y-0 sm:text-base"
         >
           매물 상담 신청하기
         </a>
 
         <nav
           aria-label="빠른 이동"
-          className="mx-auto mt-8 w-full max-w-3xl rounded-2xl border border-primary/10 bg-white/80 p-3 shadow-lg shadow-primary/5 backdrop-blur-md"
+          className="mx-auto mt-6 w-full max-w-3xl rounded-2xl border border-primary/10 bg-white/80 p-3 shadow-lg shadow-primary/5 backdrop-blur-md"
         >
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
             {QUICK_ACCESS_LINKS.map((item) => {
@@ -121,6 +133,8 @@ function HeroSection() {
           </div>
         </nav>
       </div>
+
+      <SectionScrollIndicator href="#service-intro" className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2" />
     </section>
   );
 }
@@ -136,7 +150,7 @@ const VALUE_CARDS = [
 
 function ValuePropSection() {
   return (
-    <section id="service-intro" className="scroll-mt-24 bg-white py-24">
+    <section id="service-intro" className="relative scroll-mt-24 bg-white py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">왜 홈쇼퍼인가요?</h2>
@@ -153,6 +167,7 @@ function ValuePropSection() {
             </div>
           ))}
         </div>
+        <SectionScrollIndicator href="#service-flow" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
     </section>
   );
@@ -169,7 +184,7 @@ const STEPS = [
 
 function ServiceFlowSection() {
   return (
-    <section id="service-flow" className="bg-background py-24">
+    <section id="service-flow" className="relative bg-background py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">간단한 3단계로 완성</h2>
@@ -196,6 +211,7 @@ function ServiceFlowSection() {
             </div>
           ))}
         </div>
+        <SectionScrollIndicator href="#ai-analysis" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
     </section>
   );
@@ -245,7 +261,7 @@ function AiDemoSection() {
   }
 
   return (
-    <section id="ai-analysis" className="scroll-mt-24 bg-white py-24">
+    <section id="ai-analysis" className="relative scroll-mt-24 bg-white py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
@@ -280,6 +296,7 @@ function AiDemoSection() {
             </div>
           )}
         </div>
+        <SectionScrollIndicator href="#properties" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
     </section>
   );
@@ -313,7 +330,7 @@ function PropertyPreviewSection() {
   }, [modal]);
 
   return (
-    <section id="properties" className="scroll-mt-24 bg-background py-24">
+    <section id="properties" className="relative scroll-mt-24 bg-background py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
@@ -342,6 +359,7 @@ function PropertyPreviewSection() {
             </button>
           ))}
         </div>
+        <SectionScrollIndicator href="#faq" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
 
       {modal && (
@@ -391,7 +409,7 @@ const FAQ_DATA = [
 function FaqSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   return (
-    <section id="faq" className="bg-white py-24">
+    <section id="faq" className="relative bg-white py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">자주 묻는 질문</h2>
@@ -413,6 +431,7 @@ function FaqSection() {
             );
           })}
         </div>
+        <SectionScrollIndicator href="#share-bar" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
     </section>
   );

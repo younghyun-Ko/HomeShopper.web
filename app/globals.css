@@ -35,6 +35,27 @@
   }
 }
 
+@layer utilities {
+  @keyframes gentle-bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(3px);
+    }
+  }
+
+  .animate-gentle-bounce {
+    animation: gentle-bounce 2.2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-gentle-bounce {
+      animation: none;
+    }
+  }
+}
+
 /* ── 스크롤바 미니멀 처리 ── */
 ::-webkit-scrollbar {
   width: 6px;
