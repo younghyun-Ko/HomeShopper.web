@@ -39,12 +39,11 @@ import {
 } from "lucide-react";
 
 const QUICK_ACCESS_LINKS = [
-  { label: "서비스", href: "#service-intro", icon: ShieldCheck, type: "anchor" },
   { label: "매물", href: "#properties", icon: Building2, type: "anchor" },
   { label: "AI 분석", href: "#ai-analysis", icon: Sparkles, type: "anchor" },
-  { label: "상담", href: "#contact", icon: Send, type: "anchor" },
-  { label: "조건 입력", href: "/offer", icon: ClipboardEdit, type: "page" },
-  { label: "대시보드", href: "/dashboard", icon: FileSignature, type: "page" },
+  { label: "상담", href: "#contact", icon: MessageCircle, type: "anchor" },
+  { label: "내 제안", href: "/dashboard", icon: UserCheck, type: "page" },
+  { label: "제휴", href: "/partner", icon: Handshake, type: "page" },
 ] as const;
 
 /* ═══════════════════════════════════════════════
@@ -97,7 +96,7 @@ function HeroSection() {
           aria-label="빠른 이동"
           className="mx-auto mt-8 w-full max-w-3xl rounded-2xl border border-primary/10 bg-white/80 p-3 shadow-lg shadow-primary/5 backdrop-blur-md"
         >
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
             {QUICK_ACCESS_LINKS.map((item) => {
               const Icon = item.icon;
               const className =
