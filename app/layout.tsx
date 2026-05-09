@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "@/lib/auth-context";
 import { OffersProvider } from "@/lib/offers-context";
 import Navbar from "./navbar";
 import "./globals.css";
@@ -44,11 +45,13 @@ export default function RootLayout({
   return (
     <html lang="ko" className={inter.variable}>
       <body className="flex min-h-screen flex-col font-sans">
-        <OffersProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </OffersProvider>
+        <AuthProvider>
+          <OffersProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </OffersProvider>
+        </AuthProvider>
       </body>
     </html>
   );
