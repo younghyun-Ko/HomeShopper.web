@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   BadgeCheck,
   Percent,
@@ -29,12 +30,8 @@ import {
   X,
   Stethoscope,
   RefreshCw,
-  Link2,
   MessageCircle,
-  Share2,
-  Check,
   Send,
-  ArrowRight,
   CircleCheck,
   Scale,
   TriangleAlert,
@@ -710,128 +707,15 @@ function FaqSection() {
             );
           })}
         </div>
-        <SectionScrollIndicator href="#share-bar" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
+        <SectionScrollIndicator href="#contact" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
     </section>
   );
 }
 
 /* ═══════════════════════════════════════════════
- * B2C-S07: 메신저 공유 바
- * ─ 카카오톡(모의) · 링크 복사(Clipboard API) · 문자 공유
- * ═══════════════════════════════════════════════ */
-
-function ShareBar() {
-  /* 토스트 노출 상태 */
-  const [toast, setToast] = useState(false);
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  /** 링크 복사 — Clipboard API 사용 */
-  async function handleCopyLink() {
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {
-      /* fallback: 구형 브라우저 */
-      const ta = document.createElement("textarea");
-      ta.value = url; document.body.appendChild(ta);
-      ta.select(); document.execCommand("copy");
-      document.body.removeChild(ta);
-    }
-    /* 토스트 표시 (2.5초 후 자동 사라짐) */
-    setToast(true);
-    if (toastTimer.current) clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToast(false), 2500);
-  }
-
-  /** 카카오톡 공유 — SDK 로드 전 모의 로직 */
-  function handleKakaoShare() {
-    /*
-     * 실제 배포 시 Kakao SDK 초기화 후 아래 코드 활성화:
-     * Kakao.Share.sendDefault({ objectType: 'feed', content: { ... } });
-     *
-     * MVP에서는 모바일이면 카카오톡 딥링크, 아니면 알림 표시.
-     */
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent("개원 부동산, 이제 안심하세요 — 홈쇼퍼");
-    const kakaoLink = `https://sharer.kakao.com/talk/friends/picker/link?url=${url}&text=${text}`;
-    window.open(kakaoLink, "_blank", "width=480,height=640");
-  }
-
-  /** SMS 문자 공유 */
-  function handleSmsShare() {
-    const body = encodeURIComponent(`개원 부동산, 이제 안심하세요 — 홈쇼퍼\n${window.location.href}`);
-    window.location.href = `sms:?body=${body}`;
-  }
-
-  return (
-    <section id="share-bar" className="bg-background py-16">
-      <div className="mx-auto max-w-content px-6">
-        <div className="relative mx-auto max-w-md">
-          {/* 헤더 */}
-          <p className="mb-5 text-center text-sm font-semibold text-primary">
-            주변 동료 선생님께 알려주세요
-          </p>
-
-          {/* 버튼 그룹 — 44px 최소 터치 영역 확보 */}
-          <div className="flex items-center justify-center gap-3">
-            {/* 카카오톡 */}
-            <button
-              onClick={handleKakaoShare}
-              className="flex h-12 items-center gap-2 rounded-xl bg-[#FEE500] px-5
-                         text-sm font-bold text-[#3C1E1E] shadow-sm transition-all
-                         hover:-translate-y-0.5 hover:shadow-md active:translate-y-0"
-              aria-label="카카오톡으로 공유"
-            >
-              <MessageCircle className="h-5 w-5" />
-              <span className="hidden sm:inline">카카오톡</span>
-            </button>
-
-            {/* 링크 복사 */}
-            <button
-              onClick={handleCopyLink}
-              className="flex h-12 items-center gap-2 rounded-xl border border-primary/10
-                         bg-white px-5 text-sm font-bold text-primary shadow-sm transition-all
-                         hover:-translate-y-0.5 hover:shadow-md active:translate-y-0"
-              aria-label="링크 복사"
-            >
-              <Link2 className="h-5 w-5" />
-              <span className="hidden sm:inline">링크 복사</span>
-            </button>
-
-            {/* 문자 공유 */}
-            <button
-              onClick={handleSmsShare}
-              className="flex h-12 items-center gap-2 rounded-xl border border-primary/10
-                         bg-white px-5 text-sm font-bold text-primary shadow-sm transition-all
-                         hover:-translate-y-0.5 hover:shadow-md active:translate-y-0"
-              aria-label="문자로 공유"
-            >
-              <Share2 className="h-5 w-5" />
-              <span className="hidden sm:inline">문자</span>
-            </button>
-          </div>
-
-          {/* 토스트 알림 */}
-          <div
-            className={`pointer-events-none absolute -bottom-12 left-1/2 -translate-x-1/2
-                        transition-all duration-300
-                        ${toast ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
-          >
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-lg">
-              <Check className="h-3.5 w-3.5" />
-              링크가 복사되었습니다
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════
- * B2C-S08: 리드 수집 폼 (사전예약)
- * ─ Two-step 흐름: 제출 완료 → /offer 유도
+ * B2C-S07: 리드 수집 폼 (사전예약)
+ * ─ 제출 완료 후 /thankyou에서 공유 및 상세 조건 입력 유도
  * ═══════════════════════════════════════════════ */
 
 /** 전화번호 자동 포맷팅: 01012345678 → 010-1234-5678 */
@@ -849,6 +733,7 @@ interface FormErrors {
 }
 
 function LeadFormSection() {
+  const router = useRouter();
   /* ── 폼 상태 ── */
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -856,7 +741,6 @@ function LeadFormSection() {
   const [privacy, setPrivacy] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   /** 유효성 검사 */
   function validate(): FormErrors {
@@ -885,57 +769,7 @@ function LeadFormSection() {
     await new Promise((r) => setTimeout(r, 1500));
 
     setSubmitting(false);
-    setSubmitted(true);
-  }
-
-  /* ── 제출 완료 화면 (Two-step → /offer 유도) ── */
-  if (submitted) {
-    return (
-      <section id="contact" className="scroll-mt-24 bg-gradient-to-b from-background to-white py-24">
-        <div className="mx-auto max-w-content px-6">
-          <div className="mx-auto max-w-md text-center">
-            {/* 체크 아이콘 */}
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
-              <CircleCheck className="h-10 w-10 text-green-500" strokeWidth={1.5} />
-            </div>
-
-            <h2 className="text-2xl font-extrabold text-primary">
-              신청이 완료되었습니다!
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-text-muted">
-              전담 매니저가 <strong className="text-primary">24시간 내</strong>에
-              연락드리겠습니다.
-            </p>
-
-            {/* Two-step: OfferSheet 유도 */}
-            <div className="mt-8 rounded-2xl border border-accent/20 bg-accent/5 p-6">
-              <p className="text-sm font-semibold text-primary">
-                조금 더 구체적인 조건을 알려주시면
-                <br />
-                <span className="text-accent">찰떡같은 매물</span>을 찾아드릴게요!
-              </p>
-              <a
-                href="/offer"
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm
-                           font-bold text-white shadow-md shadow-accent/20 transition-all
-                           hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30"
-              >
-                상세 조건 입력하기
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-
-            {/* 홈으로 */}
-            <button
-              onClick={() => { setSubmitted(false); setName(""); setPhone(""); setEmail(""); setPrivacy(false); setErrors({}); }}
-              className="mt-4 text-xs text-text-muted underline transition-colors hover:text-primary"
-            >
-              처음으로 돌아가기
-            </button>
-          </div>
-        </div>
-      </section>
-    );
+    router.push("/thankyou");
   }
 
   /* ── 폼 UI ── */
@@ -1082,7 +916,6 @@ export default function HomePage() {
       <AiDemoSection />
       <PropertyPreviewSection />
       <FaqSection />
-      <ShareBar />
       <LeadFormSection />
     </>
   );
