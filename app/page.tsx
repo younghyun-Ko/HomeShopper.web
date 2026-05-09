@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
 import {
   BadgeCheck,
   Percent,
@@ -36,6 +37,15 @@ import {
   ArrowRight,
   CircleCheck,
 } from "lucide-react";
+
+const QUICK_ACCESS_LINKS = [
+  { label: "서비스", href: "#service-intro", icon: ShieldCheck, type: "anchor" },
+  { label: "매물", href: "#properties", icon: Building2, type: "anchor" },
+  { label: "AI 분석", href: "#ai-analysis", icon: Sparkles, type: "anchor" },
+  { label: "상담", href: "#contact", icon: Send, type: "anchor" },
+  { label: "조건 입력", href: "/offer", icon: ClipboardEdit, type: "page" },
+  { label: "대시보드", href: "/dashboard", icon: FileSignature, type: "page" },
+] as const;
 
 /* ═══════════════════════════════════════════════
  * B2C-S01: Hero 섹션
@@ -77,11 +87,40 @@ function HeroSection() {
         </p>
 
         <a
-          href="#consultation"
+          href="#contact"
           className="mt-10 inline-block rounded-xl bg-accent px-8 py-4 text-sm font-bold text-white shadow-lg shadow-accent/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent/30 active:translate-y-0 sm:text-base"
         >
           매물 상담 신청하기
         </a>
+
+        <nav
+          aria-label="빠른 이동"
+          className="mx-auto mt-8 w-full max-w-3xl rounded-2xl border border-primary/10 bg-white/80 p-3 shadow-lg shadow-primary/5 backdrop-blur-md"
+        >
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+            {QUICK_ACCESS_LINKS.map((item) => {
+              const Icon = item.icon;
+              const className =
+                "group flex min-h-16 flex-col items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-xs font-bold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent/10 hover:text-accent active:translate-y-0 sm:text-sm";
+              const content = (
+                <>
+                  <Icon className="h-5 w-5 text-accent transition-transform group-hover:scale-110" strokeWidth={1.8} />
+                  <span className="leading-none">{item.label}</span>
+                </>
+              );
+
+              return item.type === "page" ? (
+                <Link key={item.href} href={item.href} className={className}>
+                  {content}
+                </Link>
+              ) : (
+                <a key={item.href} href={item.href} className={className}>
+                  {content}
+                </a>
+              );
+            })}
+          </div>
+        </nav>
       </div>
     </section>
   );
@@ -237,7 +276,7 @@ function AiDemoSection() {
           </div>
           {phase === "done" && (
             <div className="border-t border-primary/10 bg-white px-6 py-5 text-center">
-              <a href="#consultation" className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30"><Sparkles className="h-4 w-4" />내 매물도 분석받기</a>
+              <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30"><Sparkles className="h-4 w-4" />내 매물도 분석받기</a>
               <p className="mt-2 text-xs text-text-muted">상담을 신청하시면 실제 매물에 대한 분석을 무료로 제공해 드립니다</p>
             </div>
           )}
@@ -275,7 +314,7 @@ function PropertyPreviewSection() {
   }, [modal]);
 
   return (
-    <section id="property-listings" className="scroll-mt-24 bg-background py-24">
+    <section id="properties" className="scroll-mt-24 bg-background py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
@@ -330,7 +369,7 @@ function PropertyPreviewSection() {
               <p className="text-sm leading-relaxed text-text-muted">{modal.detail}</p>
             </div>
             <div className="border-t border-primary/10 px-6 py-5">
-              <a href="#consultation" onClick={close} className="block w-full rounded-xl bg-accent py-3.5 text-center text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">이 매물 상담 신청하기</a>
+              <a href="#contact" onClick={close} className="block w-full rounded-xl bg-accent py-3.5 text-center text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">이 매물 상담 신청하기</a>
             </div>
           </div>
         </div>
@@ -555,7 +594,7 @@ function LeadFormSection() {
   /* ── 제출 완료 화면 (Two-step → /offer 유도) ── */
   if (submitted) {
     return (
-      <section id="consultation" className="scroll-mt-24 bg-gradient-to-b from-background to-white py-24">
+      <section id="contact" className="scroll-mt-24 bg-gradient-to-b from-background to-white py-24">
         <div className="mx-auto max-w-content px-6">
           <div className="mx-auto max-w-md text-center">
             {/* 체크 아이콘 */}
@@ -606,7 +645,7 @@ function LeadFormSection() {
   const isValid = name.trim() && phone.replace(/\D/g, "").length >= 10 && privacy;
 
   return (
-    <section id="consultation" className="scroll-mt-24 bg-gradient-to-b from-background to-white py-24">
+    <section id="contact" className="scroll-mt-24 bg-gradient-to-b from-background to-white py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mx-auto max-w-md">
           {/* 헤더 */}

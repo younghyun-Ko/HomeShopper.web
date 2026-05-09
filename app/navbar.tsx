@@ -8,7 +8,7 @@ const NAV_LINKS = [
   { label: "서비스 소개", href: "/#service-intro", sectionId: "service-intro" },
   { label: "매물 보기", href: "/offer", pathname: "/offer" },
   { label: "AI 분석", href: "/#ai-analysis", sectionId: "ai-analysis" },
-  { label: "상담 신청", href: "/#consultation", sectionId: "consultation" },
+  { label: "상담 신청", href: "/#contact", sectionId: "contact" },
 ] as const;
 
 const PAGE_LINKS = [
