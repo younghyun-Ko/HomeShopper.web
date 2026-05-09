@@ -519,13 +519,73 @@ function AiDemoSection() {
 /* ═══════════════════════════════════════════════
  * B2C-S05: 매물 프리뷰
  * ═══════════════════════════════════════════════ */
-interface PropertyItem { id: string; location: string; title: string; recommend: string; area: string; deposit: string; rent: string; status: "상담가능" | "매칭중"; detail: string; }
+interface PropertyItem {
+  id: string;
+  location: string;
+  title: string;
+  recommend: string;
+  area: string;
+  deposit: string;
+  rent: string;
+  status: "상담가능" | "매칭중";
+  detail: string;
+  thumbnailUrl?: string;
+  thumbnailVariant: "map" | "building";
+}
 
 const PROPERTIES: PropertyItem[] = [
-  { id: "p1", location: "전주시 덕진구 에코시티", title: "신축 메디컬타워", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
-  { id: "p2", location: "전주시 완산구 서신동", title: "대로변 1층 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
-  { id: "p3", location: "전주시 완산구 효자동", title: "대단지 아파트 단지내 상가", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
+  { id: "p1", location: "전주시 덕진구 에코시티", title: "신축 메디컬타워", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", thumbnailVariant: "map", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
+  { id: "p2", location: "전주시 완산구 서신동", title: "대로변 1층 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", thumbnailVariant: "map", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
+  { id: "p3", location: "전주시 완산구 효자동", title: "대단지 아파트 단지내 상가", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", thumbnailVariant: "building", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
 ];
+
+function PropertyThumbnail({ property }: { property: PropertyItem }) {
+  if (property.thumbnailUrl) {
+    return (
+      <div
+        role="img"
+        aria-label={`${property.title} 썸네일`}
+        className="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+        style={{ backgroundImage: `url(${property.thumbnailUrl})` }}
+      />
+    );
+  }
+
+  if (property.thumbnailVariant === "building") {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center bg-white text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/5 text-primary/70 transition-transform duration-300 group-hover:scale-105">
+          <Building2 className="h-8 w-8" strokeWidth={1.5} />
+        </div>
+        <p className="mt-3 text-xs font-bold text-primary">건물 이미지 준비 중</p>
+        <p className="mt-1 text-[11px] font-medium text-text-muted">{property.location}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-full w-full overflow-hidden bg-[#EEF2F0]">
+      <div
+        className="absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, rgba(27,42,74,0.08) 1px, transparent 1px), linear-gradient(0deg, rgba(27,42,74,0.08) 1px, transparent 1px)",
+          backgroundSize: "34px 34px",
+        }}
+      />
+      <div className="absolute left-[-12%] top-[28%] h-4 w-[125%] rotate-[-12deg] rounded-full bg-white/90 shadow-sm" />
+      <div className="absolute left-[18%] top-[-12%] h-[130%] w-4 rotate-[18deg] rounded-full bg-white/80 shadow-sm" />
+      <div className="absolute right-[16%] top-[18%] h-[110%] w-3 rotate-[-28deg] rounded-full bg-accent/25" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="rounded-2xl border border-white/80 bg-white/90 px-4 py-3 text-center shadow-lg shadow-primary/10 backdrop-blur-sm">
+          <MapPin className="mx-auto h-6 w-6 text-accent" strokeWidth={2} />
+          <p className="mt-1 text-xs font-extrabold text-primary">지도 썸네일</p>
+          <p className="mt-0.5 text-[11px] font-medium text-text-muted">{property.location}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function PropertyPreviewSection() {
   const [modal, setModal] = useState<PropertyItem | null>(null);
@@ -547,20 +607,25 @@ function PropertyPreviewSection() {
     <section id="properties" className="relative scroll-mt-24 bg-background py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
-          <div className="mb-4 flex items-center justify-center gap-2">
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
             <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">현재 등록 매물</h2>
             <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1 text-[11px] font-semibold text-accent"><RefreshCw className="h-3 w-3" />신규 매물 업데이트 중</span>
           </div>
           <p className="text-sm text-text-muted sm:text-base">전주 지역 핵심 상권의 엄선된 매물을 확인해 보세요</p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {PROPERTIES.map((p) => (
-            <button key={p.id} onClick={() => setModal(p)} className="group cursor-pointer rounded-2xl border border-primary/5 bg-white p-0 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
-              <div className={`flex items-center justify-between rounded-t-2xl px-6 py-3 ${p.status === "상담가능" ? "bg-primary" : "bg-text-muted/80"}`}>
-                <span className="text-xs font-semibold text-white/80">{p.location}</span>
-                <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${p.status === "상담가능" ? "bg-accent text-white" : "bg-white/20 text-white"}`}>{p.status}</span>
+            <button key={p.id} onClick={() => setModal(p)} className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-primary/5 bg-white p-0 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
+              <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-primary/5 bg-background">
+                <PropertyThumbnail property={p} />
+                <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-primary shadow-sm backdrop-blur-sm">
+                  {p.location}
+                </div>
+                <div className={`absolute right-4 top-4 rounded-full px-3 py-1 text-[11px] font-bold shadow-sm ${p.status === "상담가능" ? "bg-accent text-white" : "bg-primary/75 text-white"}`}>
+                  {p.status}
+                </div>
               </div>
-              <div className="px-6 pb-6 pt-5">
+              <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
                 <h3 className="text-lg font-bold text-primary">{p.title}</h3>
                 <div className="mt-1 flex items-center gap-1.5"><Stethoscope className="h-3.5 w-3.5 text-accent" /><span className="text-xs font-medium text-accent">{p.recommend}</span></div>
                 <div className="mt-4 space-y-2">
@@ -568,7 +633,7 @@ function PropertyPreviewSection() {
                   <div className="flex items-center gap-2 text-sm text-text-muted"><Banknote className="h-3.5 w-3.5 shrink-0" />{p.deposit} · {p.rent}</div>
                   <div className="flex items-center gap-2 text-sm text-text-muted"><MapPin className="h-3.5 w-3.5 shrink-0" />{p.location}</div>
                 </div>
-                <p className="mt-4 text-xs font-medium text-accent transition-colors group-hover:text-primary">클릭하여 상세 보기 →</p>
+                <p className="mt-auto pt-4 text-xs font-medium text-accent transition-colors group-hover:text-primary">클릭하여 상세 보기 →</p>
               </div>
             </button>
           ))}
