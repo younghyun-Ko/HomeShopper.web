@@ -14,7 +14,7 @@ import {
   Building2, Calendar, Clock, CircleCheck, CircleX,
   ArrowLeftRight, Sparkles, X, Loader2, Send, Undo2,
   PartyPopper, ChevronRight, FileText, ArrowRight,
-  Bell, Inbox, MapPin, Users, TrendingUp, Trophy,
+  Bell, Inbox, Users, TrendingUp, Trophy,
   AlertTriangle, ArrowUp, Crown,
 } from "lucide-react";
 

@@ -26,6 +26,10 @@
 
 /* ── 글로벌 베이스 ── */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-text-main antialiased;
   }

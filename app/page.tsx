@@ -77,7 +77,7 @@ function HeroSection() {
         </p>
 
         <a
-          href="#lead-form"
+          href="#consultation"
           className="mt-10 inline-block rounded-xl bg-accent px-8 py-4 text-sm font-bold text-white shadow-lg shadow-accent/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent/30 active:translate-y-0 sm:text-base"
         >
           매물 상담 신청하기
@@ -98,7 +98,7 @@ const VALUE_CARDS = [
 
 function ValuePropSection() {
   return (
-    <section id="value-prop" className="bg-white py-24">
+    <section id="service-intro" className="scroll-mt-24 bg-white py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">왜 홈쇼퍼인가요?</h2>
@@ -207,7 +207,7 @@ function AiDemoSection() {
   }
 
   return (
-    <section id="ai-demo" className="bg-white py-24">
+    <section id="ai-analysis" className="scroll-mt-24 bg-white py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
@@ -237,7 +237,7 @@ function AiDemoSection() {
           </div>
           {phase === "done" && (
             <div className="border-t border-primary/10 bg-white px-6 py-5 text-center">
-              <a href="#lead-form" className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30"><Sparkles className="h-4 w-4" />내 매물도 분석받기</a>
+              <a href="#consultation" className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30"><Sparkles className="h-4 w-4" />내 매물도 분석받기</a>
               <p className="mt-2 text-xs text-text-muted">상담을 신청하시면 실제 매물에 대한 분석을 무료로 제공해 드립니다</p>
             </div>
           )}
@@ -275,7 +275,7 @@ function PropertyPreviewSection() {
   }, [modal]);
 
   return (
-    <section id="property-preview" className="bg-background py-24">
+    <section id="property-listings" className="scroll-mt-24 bg-background py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mb-14 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
@@ -330,7 +330,7 @@ function PropertyPreviewSection() {
               <p className="text-sm leading-relaxed text-text-muted">{modal.detail}</p>
             </div>
             <div className="border-t border-primary/10 px-6 py-5">
-              <a href="#lead-form" onClick={close} className="block w-full rounded-xl bg-accent py-3.5 text-center text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">이 매물 상담 신청하기</a>
+              <a href="#consultation" onClick={close} className="block w-full rounded-xl bg-accent py-3.5 text-center text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">이 매물 상담 신청하기</a>
             </div>
           </div>
         </div>
@@ -555,7 +555,7 @@ function LeadFormSection() {
   /* ── 제출 완료 화면 (Two-step → /offer 유도) ── */
   if (submitted) {
     return (
-      <section id="lead-form" className="bg-gradient-to-b from-background to-white py-24">
+      <section id="consultation" className="scroll-mt-24 bg-gradient-to-b from-background to-white py-24">
         <div className="mx-auto max-w-content px-6">
           <div className="mx-auto max-w-md text-center">
             {/* 체크 아이콘 */}
@@ -606,7 +606,7 @@ function LeadFormSection() {
   const isValid = name.trim() && phone.replace(/\D/g, "").length >= 10 && privacy;
 
   return (
-    <section id="lead-form" className="bg-gradient-to-b from-background to-white py-24">
+    <section id="consultation" className="scroll-mt-24 bg-gradient-to-b from-background to-white py-24">
       <div className="mx-auto max-w-content px-6">
         <div className="mx-auto max-w-md">
           {/* 헤더 */}

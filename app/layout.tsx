@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Link from "next/link";
 import { OffersProvider } from "@/lib/offers-context";
+import Navbar from "./navbar";
 import "./globals.css";
 
 /*
@@ -25,36 +25,6 @@ export const metadata: Metadata = {
     locale: "ko_KR",
   },
 };
-
-function Navbar() {
-  return (
-    <nav className="sticky top-0 z-50 border-b border-primary/10 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-content items-center justify-between px-6 py-4">
-        <Link
-          href="/"
-          className="text-lg font-extrabold tracking-tight text-primary"
-        >
-          HomeShopper
-        </Link>
-
-        <div className="flex items-center gap-5">
-          <Link
-            href="/mypage/offers"
-            className="text-sm font-medium text-text-muted transition-colors hover:text-primary"
-          >
-            내 제안
-          </Link>
-          <Link
-            href="/partner"
-            className="text-sm font-medium text-text-muted transition-colors hover:text-primary"
-          >
-            중개사 제휴
-          </Link>
-        </div>
-      </div>
-    </nav>
-  );
-}
 
 function Footer() {
   return (
