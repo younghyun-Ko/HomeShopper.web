@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { BriefcaseBusiness, LogIn, LogOut, User, X } from "lucide-react";
@@ -293,9 +294,17 @@ export default function Navbar() {
         <div className="mx-auto flex max-w-content items-center gap-5 px-6 py-4">
           <Link
             href="/"
-            className="shrink-0 text-lg font-extrabold tracking-tight text-primary"
+            className="inline-flex shrink-0 items-center gap-2 text-lg font-extrabold tracking-tight text-primary"
           >
-            HomeShopper
+            <Image
+              src="/homeshopper-logo.png"
+              alt=""
+              aria-hidden="true"
+              width={28}
+              height={28}
+              className="h-7 w-7 shrink-0 rounded-md"
+            />
+            <span>HomeShopper</span>
           </Link>
 
           <div className="flex flex-1 items-center justify-end gap-5 overflow-x-auto">
