@@ -6,10 +6,9 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
-  BadgeCheck,
   Percent,
   ShieldCheck,
   Handshake,
@@ -30,7 +29,6 @@ import {
   X,
   Stethoscope,
   RefreshCw,
-  MessageCircle,
   Send,
   CircleCheck,
   Scale,
@@ -38,20 +36,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-const QUICK_ACCESS_LINKS = [
-  { label: "매물", href: "#properties", icon: Building2, type: "anchor" },
-  { label: "AI 분석", href: "#ai-analysis", icon: Sparkles, type: "anchor" },
-  { label: "상담", href: "#contact", icon: MessageCircle, type: "anchor" },
-  { label: "내 제안", href: "/dashboard", icon: UserCheck, type: "page" },
-  { label: "제휴", href: "/partner", icon: Handshake, type: "page" },
-] as const;
-
 function SectionScrollIndicator({ href, className = "" }: { href: string; className?: string }) {
   return (
     <a
       href={href}
       aria-label="다음 섹션으로 이동"
-      className={`flex h-10 w-10 items-center justify-center rounded-full border border-primary/10 bg-white/80 text-primary shadow-md shadow-primary/5 backdrop-blur-md transition-colors hover:bg-white hover:text-accent ${className}`}
+      className={`flex h-10 w-10 items-center justify-center rounded-full border border-accent/15 bg-white/85 text-accent shadow-md shadow-accent/10 backdrop-blur-md transition-colors hover:bg-white hover:text-primary ${className}`}
     >
       <ChevronDown className="h-5 w-5 animate-gentle-bounce" strokeWidth={1.8} />
     </a>
@@ -65,76 +55,54 @@ function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[80vh] items-center justify-center overflow-hidden py-12 pb-20
-                 bg-gradient-to-br from-background via-white to-primary/5"
+      className="relative flex min-h-[75vh] items-center justify-center overflow-hidden px-6 py-10 pb-12"
     >
-      <div className="pointer-events-none absolute -right-32 -top-32 h-[480px] w-[480px] rounded-full bg-accent/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-primary/5 blur-3xl" />
-
-      <div className="relative z-10 mx-auto max-w-content px-6 text-center">
-        <div className="mb-5 flex flex-wrap items-center justify-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-primary backdrop-blur-sm">
-            <BadgeCheck className="h-3.5 w-3.5 text-accent" />
-            특허 출원 완료
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-primary backdrop-blur-sm">
-            <BadgeCheck className="h-3.5 w-3.5 text-accent" />
-            전주 지역 제휴 중개사 운영 중
-          </span>
-        </div>
-
-        <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-primary sm:text-5xl md:text-6xl">
-          개원, 이제
-          <br className="sm:hidden" />
-          <span className="text-accent"> 부동산</span>부터
-          <br />
-          안심하세요
-        </h1>
-
-        <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-text-muted sm:text-lg">
-          전속 중개 매칭 + 권리관계 AI 분석으로
-          <br className="hidden sm:block" />
-          중개 수수료를 대폭 절감하세요
-        </p>
-
-        <a
-          href="#contact"
-          className="mt-7 inline-block rounded-xl bg-accent px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent/30 active:translate-y-0 sm:text-base"
-        >
-          매물 상담 신청하기
-        </a>
-
-        <nav
-          aria-label="빠른 이동"
-          className="mx-auto mt-6 w-full max-w-3xl rounded-2xl border border-primary/10 bg-white/80 p-3 shadow-lg shadow-primary/5 backdrop-blur-md"
-        >
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-            {QUICK_ACCESS_LINKS.map((item) => {
-              const Icon = item.icon;
-              const className =
-                "group flex min-h-16 flex-col items-center justify-center gap-1.5 rounded-xl px-2 py-3 text-xs font-bold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent/10 hover:text-accent active:translate-y-0 sm:text-sm";
-              const content = (
-                <>
-                  <Icon className="h-5 w-5 text-accent transition-transform group-hover:scale-110" strokeWidth={1.8} />
-                  <span className="leading-none">{item.label}</span>
-                </>
-              );
-
-              return item.type === "page" ? (
-                <Link key={item.href} href={item.href} className={className}>
-                  {content}
-                </Link>
-              ) : (
-                <a key={item.href} href={item.href} className={className}>
-                  {content}
-                </a>
-              );
-            })}
-          </div>
-        </nav>
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/hero-bg.png"
+          alt="Modern medical office"
+          fill
+          className="object-cover opacity-90 transition-transform duration-1000 hover:scale-105"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-background" />
       </div>
 
-      <SectionScrollIndicator href="#service-intro" className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2" />
+      <div className="relative z-10 mx-auto max-w-content text-center animate-fade-up">
+        <div className="glass mx-auto mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 shadow-lg">
+          <Sparkles className="h-4 w-4 text-accent" />
+          <p className="text-xs font-bold tracking-wide text-primary">성공적인 개원의 시작점</p>
+        </div>
+
+        <h1 className="mx-auto mt-2 max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl drop-shadow-sm">
+          리스크는 <span className="text-blue-400">AI</span>가 지우고,<br />
+          수수료는 <span className="text-brand-gradient bg-clip-text text-transparent">홈쇼퍼</span>가 낮췄습니다.
+        </h1>
+        
+        <p className="mx-auto mt-6 max-w-2xl text-lg font-medium text-white/80 md:text-xl">
+          데이터 기반의 권리 분석과 합리적인 중개 시스템으로<br />
+          당신의 첫 번째 병원을 안전하게 시작하세요.
+        </p>
+
+        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
+            href="#contact"
+            className="group relative flex items-center gap-2 overflow-hidden rounded-2xl bg-brand-gradient px-10 py-5 text-base font-bold text-white shadow-brand transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+          >
+            <span className="relative z-10">무료 매물 상담 신청</span>
+            <ChevronRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </a>
+          <a
+            href="#properties"
+            className="glass flex items-center gap-2 rounded-2xl px-10 py-5 text-base font-bold text-primary transition-all hover:bg-white/90"
+          >
+            실시간 매물 보기
+          </a>
+        </div>
+      </div>
+      
+      <SectionScrollIndicator href="#service-intro" className="absolute bottom-10 left-1/2 -translate-x-1/2" />
     </section>
   );
 }
@@ -150,25 +118,25 @@ const VALUE_CARDS = [
 
 function ValuePropSection() {
   return (
-    <section id="service-intro" className="relative scroll-mt-24 bg-white py-24">
-      <div className="mx-auto max-w-content px-6">
-        <div className="mb-14 text-center">
-          <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">왜 홈쇼퍼인가요?</h2>
-          <p className="mt-3 text-sm text-text-muted sm:text-base">개원을 준비하는 의사 선생님을 위한 세 가지 약속</p>
+    <section id="service-intro" className="dot-pattern relative scroll-mt-24 bg-background pt-24 pb-36">
+      <div className="mx-auto max-w-content px-6 animate-fade-up">
+        <div className="mb-16 text-center">
+          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">왜 홈쇼퍼인가요?</h2>
+          <p className="mt-4 text-base text-text-muted">개원을 준비하는 의사 선생님을 위한 세 가지 차별화된 약속</p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {VALUE_CARDS.map((card) => (
-            <div key={card.title} className="group rounded-2xl border border-primary/5 bg-background p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:shadow-primary/5">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 transition-colors group-hover:bg-accent/20">
-                <card.icon className="h-6 w-6 text-accent" strokeWidth={1.8} />
+            <div key={card.title} className="group glass rounded-3xl p-10 transition-all duration-500 hover:-translate-y-2 hover:bg-white hover:shadow-2xl">
+              <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-gradient text-white shadow-brand transition-transform group-hover:scale-110 group-hover:rotate-3">
+                <card.icon className="h-8 w-8" strokeWidth={1.5} />
               </div>
-              <h3 className="text-lg font-bold text-primary">{card.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-text-muted">{card.desc}</p>
+              <h3 className="text-xl font-bold text-primary">{card.title}</h3>
+              <p className="mt-4 text-base leading-relaxed text-text-muted">{card.desc}</p>
             </div>
           ))}
         </div>
-        <SectionScrollIndicator href="#service-flow" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
+      <SectionScrollIndicator href="#service-flow" className="absolute bottom-10 left-1/2 -translate-x-1/2" />
     </section>
   );
 }
@@ -184,35 +152,30 @@ const STEPS = [
 
 function ServiceFlowSection() {
   return (
-    <section id="service-flow" className="relative bg-background py-24">
-      <div className="mx-auto max-w-content px-6">
-        <div className="mb-14 text-center">
-          <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">간단한 3단계로 완성</h2>
-          <p className="mt-3 text-sm text-text-muted sm:text-base">상담 신청부터 계약까지, 홈쇼퍼가 함께합니다</p>
+    <section id="service-flow" className="mesh-bg relative pt-28 pb-36">
+      <div className="mx-auto max-w-content px-6 animate-fade-up">
+        <div className="mb-20 text-center">
+          <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">간단한 3단계로 완성</h2>
+          <p className="mt-4 text-lg text-text-muted">상담 신청부터 계약까지, 홈쇼퍼가 모든 과정을 함께합니다</p>
         </div>
-        <div className="flex flex-col items-center gap-4 lg:flex-row lg:justify-center lg:gap-0">
+        <div className="relative flex flex-col items-center gap-10 lg:flex-row lg:justify-between lg:gap-0">
+          {/* Connecting Line (Desktop) - Removed per user request */}
+          
           {STEPS.map((step, i) => (
-            <div key={step.title} className="flex flex-col items-center lg:flex-row">
-              <div className={`relative flex w-full max-w-xs flex-col items-center rounded-2xl p-8 text-center transition-all duration-300 lg:w-64 ${step.highlight ? "border-2 border-accent/40 bg-white shadow-lg shadow-accent/10" : "border border-primary/5 bg-white"}`}>
-                {step.highlight && <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">Core</span>}
-                <span className="mb-4 text-xs font-bold text-text-muted">STEP {i + 1}</span>
-                <div className={`mb-4 flex h-14 w-14 items-center justify-center rounded-2xl ${step.highlight ? "bg-accent/15" : "bg-primary/5"}`}>
-                  <step.icon className={`h-7 w-7 ${step.highlight ? "text-accent" : "text-primary/60"}`} strokeWidth={1.6} />
+            <div key={step.title} className="relative z-10 flex flex-col items-center lg:w-1/3">
+              <div className={`group flex flex-col items-center rounded-3xl p-10 text-center transition-all duration-500 lg:w-72 ${step.highlight ? "glass ring-4 ring-accent/5 scale-105 shadow-2xl" : "bg-white/50 border border-white/20 hover:bg-white hover:shadow-xl"}`}>
+                <span className="mb-6 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">0{i + 1}</span>
+                <div className={`mb-6 flex h-20 w-20 items-center justify-center rounded-3xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 ${step.highlight ? "bg-accent text-white shadow-brand" : "bg-accent/10 text-accent"}`}>
+                  <step.icon className="h-10 w-10" strokeWidth={1.5} />
                 </div>
-                <h3 className={`text-base font-bold ${step.highlight ? "text-accent" : "text-primary"}`}>{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">{step.desc}</p>
+                <h3 className="text-xl font-bold text-primary">{step.title}</h3>
+                <p className="mt-4 text-sm leading-relaxed text-text-muted">{step.desc}</p>
               </div>
-              {i < STEPS.length - 1 && (
-                <>
-                  <div className="hidden px-3 lg:flex lg:items-center"><ChevronRight className="h-6 w-6 text-text-muted/40" /></div>
-                  <div className="flex py-1 lg:hidden"><ChevronDown className="h-6 w-6 text-text-muted/40" /></div>
-                </>
-              )}
             </div>
           ))}
         </div>
-        <SectionScrollIndicator href="#ai-analysis" className="absolute bottom-8 left-1/2 -translate-x-1/2" />
       </div>
+      <SectionScrollIndicator href="#ai-analysis" className="absolute bottom-10 left-1/2 -translate-x-1/2" />
     </section>
   );
 }
@@ -331,7 +294,7 @@ function StatusBadge({ status }: { status: AnalysisStatus }) {
 }
 
 function ScoreGauge({ score, status }: { score: number; status: AnalysisStatus }) {
-  const color = status === "safe" ? "#16A34A" : status === "caution" ? "#D4A853" : "#DC2626";
+  const color = status === "safe" ? "#16A34A" : status === "caution" ? "#F59E0B" : "#DC2626";
 
   return (
     <div
@@ -352,55 +315,81 @@ function AnalysisResultDashboard({ property }: { property: SampleProperty }) {
   const VerdictIcon = verdictMeta.icon;
 
   return (
-    <div className="border-t border-primary/10 bg-white p-5 sm:p-6">
-      <div className="grid gap-5 lg:grid-cols-[auto_1fr] lg:items-center">
-        <div className="flex justify-center">
+    <div className="mesh-bg border-t border-primary/10 p-6 sm:p-10">
+      <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+        {/* Left: Score Column */}
+        <div className="flex flex-col items-center justify-center rounded-3xl bg-white p-8 shadow-xl shadow-primary/5">
           <ScoreGauge score={property.score} status={property.verdictStatus} />
-        </div>
-        <div className="rounded-2xl border border-primary/10 bg-background p-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${verdictMeta.iconClass}`}>
-              <VerdictIcon className="h-5 w-5" strokeWidth={1.8} />
-            </span>
-            <StatusBadge status={property.verdictStatus} />
-            <p className="text-lg font-extrabold text-primary">{property.verdict}</p>
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-text-muted">{property.summary}</p>
-          <p className={`mt-3 text-sm font-bold ${verdictMeta.tone}`}>{property.recommendation}</p>
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        {property.items.map((item) => {
-          const ItemIcon = item.icon;
-          const itemMeta = STATUS_META[item.status];
-
-          return (
-            <div key={item.label} className="rounded-2xl border border-primary/10 bg-white p-4 shadow-sm shadow-primary/5">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
-                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${itemMeta.iconClass}`}>
-                    <ItemIcon className="h-5 w-5" strokeWidth={1.8} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-primary">{item.label}</p>
-                    <p className="mt-0.5 text-xs font-semibold text-text-muted">{item.value}</p>
-                  </div>
-                </div>
-                <StatusBadge status={item.status} />
-              </div>
-              <p className="mt-3 text-xs leading-relaxed text-text-muted">{item.detail}</p>
+          <div className="mt-8 w-full space-y-4">
+            <div className="flex items-center justify-between text-sm font-medium">
+              <span className="text-text-muted">시장 적합성</span>
+              <span className="text-primary">95%</span>
             </div>
-          );
-        })}
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary/5">
+              <div className="h-full w-[95%] bg-accent" />
+            </div>
+            <div className="flex items-center justify-between text-sm font-medium">
+              <span className="text-text-muted">법률 안전성</span>
+              <span className="text-primary">98%</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-primary/5">
+              <div className="h-full w-[98%] bg-green-500" />
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Detailed Analysis */}
+        <div className="space-y-6">
+          <div className="glass flex flex-wrap items-center gap-4 rounded-3xl p-6">
+            <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${verdictMeta.iconClass}`}>
+              <VerdictIcon className="h-7 w-7" strokeWidth={2} />
+            </span>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <StatusBadge status={property.verdictStatus} />
+                <h4 className="text-xl font-bold text-primary">{property.verdict}</h4>
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">{property.summary}</p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {property.items.map((item) => {
+              const ItemIcon = item.icon;
+              const itemMeta = STATUS_META[item.status];
+
+              return (
+                <div key={item.label} className="group flex flex-col justify-between rounded-2xl bg-white p-5 shadow-sm transition-all hover:shadow-md">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition-colors group-hover:bg-accent group-hover:text-white ${itemMeta.iconClass}`}>
+                        <ItemIcon className="h-5 w-5" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-text-muted uppercase tracking-wider">{item.label}</p>
+                        <p className="text-base font-bold text-primary">{item.value}</p>
+                      </div>
+                    </div>
+                    <StatusBadge status={item.status} />
+                  </div>
+                  <p className="mt-4 text-xs leading-relaxed text-text-muted">{item.detail}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      <div className="mt-6 text-center">
-        <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">
+      <div className="mt-10 flex flex-col items-center justify-between gap-6 border-t border-primary/5 pt-10 sm:flex-row">
+        <div>
+          <p className="text-sm font-bold text-primary">이 분석은 AI 가독 모델을 기반으로 생성되었습니다.</p>
+          <p className="text-xs text-text-muted">실제 계약 시 반드시 공인중개사와 법률 전문가의 재확인을 거치시기 바랍니다.</p>
+        </div>
+        <a href="#contact" className="group flex items-center gap-2 rounded-2xl bg-primary px-8 py-4 text-sm font-bold text-white transition-all hover:bg-accent hover:shadow-brand">
           <Sparkles className="h-4 w-4" />
-          내 매물도 분석받기
+          상세 리포트 받아보기
+          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </a>
-        <p className="mt-2 text-xs text-text-muted">상담을 신청하시면 실제 매물에 대한 분석을 무료로 제공해 드립니다</p>
       </div>
     </div>
   );
@@ -531,9 +520,9 @@ interface PropertyItem {
 }
 
 const PROPERTIES: PropertyItem[] = [
-  { id: "p1", location: "전주시 덕진구 에코시티", title: "신축 메디컬타워", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", thumbnailVariant: "map", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
-  { id: "p2", location: "전주시 완산구 서신동", title: "대로변 1층 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", thumbnailVariant: "map", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
-  { id: "p3", location: "전주시 완산구 효자동", title: "대단지 아파트 단지내 상가", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", thumbnailVariant: "building", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
+  { id: "p1", location: "전주시 덕진구 에코시티", title: "신축 메디컬타워", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", thumbnailUrl: "/prop-1.png", thumbnailVariant: "building", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
+  { id: "p2", location: "전주시 완산구 서신동", title: "대로변 1층 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", thumbnailUrl: "/prop-2.png", thumbnailVariant: "map", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
+  { id: "p3", location: "전주시 완산구 효자동", title: "대단지 아파트 단지내 상가", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", thumbnailUrl: "/prop-3.png", thumbnailVariant: "building", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
 ];
 
 function PropertyThumbnail({ property }: { property: PropertyItem }) {
@@ -618,7 +607,7 @@ function PropertyPreviewSection() {
                 <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-primary shadow-sm backdrop-blur-sm">
                   {p.location}
                 </div>
-                <div className={`absolute right-4 top-4 rounded-full px-3 py-1 text-[11px] font-bold shadow-sm ${p.status === "상담가능" ? "bg-accent text-white" : "bg-primary/75 text-white"}`}>
+                <div className={`absolute right-4 top-4 rounded-full px-3 py-1 text-[11px] font-bold shadow-sm ${p.status === "상담가능" ? "bg-brand-gradient text-white" : "bg-primary/75 text-white"}`}>
                   {p.status}
                 </div>
               </div>
@@ -662,7 +651,7 @@ function PropertyPreviewSection() {
               <p className="text-sm leading-relaxed text-text-muted">{modal.detail}</p>
             </div>
             <div className="border-t border-primary/10 px-6 py-5">
-              <a href="#contact" onClick={close} className="block w-full rounded-xl bg-accent py-3.5 text-center text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">이 매물 상담 신청하기</a>
+              <a href="#contact" onClick={close} className="block w-full rounded-xl bg-brand-gradient py-3.5 text-center text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">이 매물 상담 신청하기</a>
             </div>
           </div>
         </div>
@@ -875,7 +864,7 @@ function LeadFormSection() {
               onClick={handleSubmit}
               disabled={submitting || !isValid}
               className="flex h-13 w-full items-center justify-center gap-2 rounded-xl
-                         bg-accent py-3.5 text-sm font-bold text-white shadow-md
+                         bg-brand-gradient py-3.5 text-sm font-bold text-white shadow-md
                          shadow-accent/20 transition-all
                          hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30
                          disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40

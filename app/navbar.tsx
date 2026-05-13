@@ -144,7 +144,7 @@ function AuthDialog({
                   onClick={() => applyRoleDefaults(item.role)}
                   className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm font-bold transition-colors ${
                     active
-                      ? "border-accent bg-accent/10 text-primary"
+                      ? "border-accent bg-accent/10 text-accent"
                       : "border-primary/10 text-text-muted hover:border-primary/20 hover:text-primary"
                   }`}
                 >
@@ -290,11 +290,11 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 border-b border-primary/10 bg-white/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 border-b border-accent/10 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-content items-center gap-5 px-6 py-4">
           <Link
             href="/"
-            className="inline-flex shrink-0 items-center gap-2 text-lg font-extrabold tracking-tight text-primary"
+            className="inline-flex shrink-0 items-center gap-2 text-lg font-extrabold tracking-tight text-accent"
           >
             <Image
               src="/homeshopper-logo.png"
@@ -350,7 +350,12 @@ export default function Navbar() {
 
             <Link
               href="/partner"
-              className="shrink-0 text-sm font-medium text-text-muted transition-colors hover:text-primary"
+              aria-current={pathname === "/partner" ? "page" : undefined}
+              className={`shrink-0 text-sm transition-colors hover:text-primary ${
+                pathname === "/partner"
+                  ? "font-bold text-accent underline decoration-2 underline-offset-8"
+                  : "font-medium text-text-muted"
+              }`}
             >
               중개사 제휴
             </Link>
@@ -373,7 +378,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setAuthOpen(true)}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-primary/90"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-gradient px-4 py-2 text-xs font-bold text-white shadow-md shadow-accent/20 transition-transform hover:-translate-y-0.5"
               >
                 <LogIn className="h-3.5 w-3.5" />
                 로그인

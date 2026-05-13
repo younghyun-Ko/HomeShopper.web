@@ -6,12 +6,15 @@
  * 공유 Context(useOffers)를 통해 /mypage/offers와 실시간 동기화
  */
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, type ChangeEvent, type FormEvent } from "react";
+import { useAuth } from "@/lib/auth-context";
 import { useOffers, type Offer, type OfferStatus } from "@/lib/offers-context";
 import {
   Building2, Calendar, ChevronRight, X, Check, XCircle,
   ArrowLeftRight, TrendingDown, BarChart3, Clock, CircleCheck,
-  CircleX, MessageSquare, Loader2, Filter, Inbox,
+  CircleX, MessageSquare, Loader2, Filter, Inbox, BadgeCheck,
+  Building, Handshake, MapPin, Phone, ShieldCheck, TrendingUp,
+  User, Users,
 } from "lucide-react";
 
 /* ── 유틸 ── */
@@ -33,6 +36,268 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "ACCEPTED", label: "수락됨" }, { key: "REJECTED", label: "거절됨" },
   { key: "COUNTER_OFFER", label: "역제안" },
 ];
+
+const PARTNER_BENEFITS = [
+  {
+    icon: Clock,
+    title: "업무 범위 축소",
+    desc: "서류 검토, 보증, 최종 납입 등 핵심 법적 절차만 중개 업무가 한정됩니다. 나머지는 홈쇼퍼가 처리합니다.",
+  },
+  {
+    icon: Users,
+    title: "영업 리소스 절감",
+    desc: "플랫폼이 매도자 및 매수자를 직접 연결하여 고객 유치 부담을 해소합니다. 별도 영업 활동 불필요.",
+  },
+  {
+    icon: TrendingUp,
+    title: "부가 수익 창출",
+    desc: "전담 투입 시간은 줄고, 플랫폼 매칭으로 거래 빈도는 늘어나 총수익이 증가합니다.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "AI 서류 분석 지원",
+    desc: "등기부등본·건축물대장 AI 자동 분석으로 권리관계 검토 시간을 90% 이상 절감합니다.",
+  },
+] as const;
+
+const PROPERTY_TYPES = ["메디컬 전문 빌딩", "일반 상가", "오피스텔", "주상복합", "단지내 상가", "기타"] as const;
+
+type PartnerFormState = {
+  agencyName: string;
+  ownerName: string;
+  phone: string;
+  address: string;
+};
+
+function PartnerLandingPage() {
+  const [form, setForm] = useState<PartnerFormState>({
+    agencyName: "",
+    ownerName: "",
+    phone: "",
+    address: "",
+  });
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [submitted, setSubmitted] = useState(false);
+
+  const canSubmit =
+    form.agencyName.trim() &&
+    form.ownerName.trim() &&
+    form.phone.trim() &&
+    form.address.trim() &&
+    selectedTypes.length > 0;
+
+  function handleChange(field: keyof PartnerFormState) {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      setForm((current) => ({ ...current, [field]: event.target.value }));
+      setSubmitted(false);
+    };
+  }
+
+  function toggleType(type: string) {
+    setSelectedTypes((current) =>
+      current.includes(type) ? current.filter((item) => item !== type) : [...current, type],
+    );
+    setSubmitted(false);
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!canSubmit) return;
+
+    setSubmitted(true);
+  }
+
+  return (
+    <div className="bg-white">
+      <section className="bg-gradient-to-b from-white via-background to-[#eef5ff] px-6 py-20 text-center sm:py-24 lg:py-28">
+        <div className="mx-auto max-w-content">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-white/80 px-4 py-1.5 text-xs font-bold text-primary shadow-sm shadow-primary/5">
+            <BadgeCheck className="h-3.5 w-3.5" />
+            파트너 중개사 모집 중
+          </div>
+
+          <h1 className="mx-auto mt-7 max-w-3xl text-4xl font-black leading-tight tracking-tight text-primary sm:text-5xl">
+            제휴 중개사가 되어,
+            <br />
+            <span className="text-brand-gradient">새로운 수익 파이프라인</span>을 만드세요
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-primary/70 sm:text-lg">
+            홈쇼퍼가 고객 유치부터 서류 분석까지 처리합니다.
+            <br className="hidden sm:block" />
+            중개사님은 핵심 업무에만 집중하세요.
+          </p>
+
+          <a
+            href="#partner-apply"
+            className="mt-10 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-8 py-4 text-sm font-extrabold text-white shadow-brand transition hover:-translate-y-0.5"
+          >
+            제휴 신청하기
+            <ChevronRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+
+      <section className="bg-background px-6 py-20 sm:py-24">
+        <div className="mx-auto max-w-content">
+          <div className="text-center">
+            <h2 className="text-2xl font-black tracking-tight text-primary sm:text-3xl">
+              왜 홈쇼퍼와 함께해야 할까요?
+            </h2>
+            <p className="mt-3 text-sm font-medium text-text-muted">
+              제휴 중개사에게 제공되는 네 가지 핵심 혜택
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {PARTNER_BENEFITS.map((benefit) => {
+              const Icon = benefit.icon;
+
+              return (
+                <article
+                  key={benefit.title}
+                  className="flex gap-5 rounded-xl border border-primary/5 bg-white p-8 shadow-sm shadow-primary/[0.03]"
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-gradient text-white shadow-md shadow-accent/20">
+                    <Icon className="h-6 w-6" strokeWidth={1.7} />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-extrabold text-primary">{benefit.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-text-muted">{benefit.desc}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section id="partner-apply" className="scroll-mt-24 bg-white px-6 py-20 sm:py-24">
+        <div className="mx-auto max-w-2xl">
+          <div className="text-center">
+            <h2 className="text-2xl font-black tracking-tight text-primary sm:text-3xl">제휴 신청하기</h2>
+            <p className="mt-4 text-sm font-medium text-text-muted">
+              아래 정보를 입력해 주시면 빠르게 검토해 드리겠습니다
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="mt-12 rounded-2xl border border-accent/15 bg-background p-8 shadow-md shadow-accent/5 sm:p-10"
+          >
+            <div className="space-y-7">
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-sm font-extrabold text-primary">
+                  <Building className="h-4 w-4 text-text-muted" />
+                  중개사무소명 <span className="text-red-500">*</span>
+                </span>
+                <input
+                  value={form.agencyName}
+                  onChange={handleChange("agencyName")}
+                  placeholder="홈쇼퍼공인중개사사무소"
+                  className="h-12 w-full rounded-xl border border-primary/10 bg-white px-4 text-sm font-medium text-primary outline-none transition focus:border-primary/30 focus:ring-4 focus:ring-primary/5"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-sm font-extrabold text-primary">
+                  <User className="h-4 w-4 text-text-muted" />
+                  대표자명 <span className="text-red-500">*</span>
+                </span>
+                <input
+                  value={form.ownerName}
+                  onChange={handleChange("ownerName")}
+                  placeholder="홍길동"
+                  className="h-12 w-full rounded-xl border border-primary/10 bg-white px-4 text-sm font-medium text-primary outline-none transition focus:border-primary/30 focus:ring-4 focus:ring-primary/5"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-sm font-extrabold text-primary">
+                  <Phone className="h-4 w-4 text-text-muted" />
+                  연락처 <span className="text-red-500">*</span>
+                </span>
+                <input
+                  value={form.phone}
+                  onChange={handleChange("phone")}
+                  placeholder="010-0000-0000"
+                  inputMode="tel"
+                  className="h-12 w-full rounded-xl border border-primary/10 bg-white px-4 text-sm font-medium text-primary outline-none transition focus:border-primary/30 focus:ring-4 focus:ring-primary/5"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-sm font-extrabold text-primary">
+                  <MapPin className="h-4 w-4 text-text-muted" />
+                  소재지 <span className="text-red-500">*</span>
+                </span>
+                <input
+                  value={form.address}
+                  onChange={handleChange("address")}
+                  placeholder="전주시 덕진구 에코시티로 00"
+                  className="h-12 w-full rounded-xl border border-primary/10 bg-white px-4 text-sm font-medium text-primary outline-none transition focus:border-primary/30 focus:ring-4 focus:ring-primary/5"
+                />
+              </label>
+
+              <div>
+                <p className="mb-3 text-sm font-extrabold text-primary">
+                  주요 취급 매물 유형 <span className="font-medium text-text-muted">(복수 선택 가능)</span>
+                </p>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {PROPERTY_TYPES.map((type) => {
+                    const active = selectedTypes.includes(type);
+
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => toggleType(type)}
+                        className={`h-11 rounded-xl border px-3 text-xs font-bold transition ${
+                          active
+                            ? "border-accent bg-brand-gradient text-white shadow-sm shadow-accent/20"
+                            : "border-primary/10 bg-white text-text-muted hover:border-primary/25 hover:text-primary"
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              className="mt-10 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-gradient text-sm font-extrabold text-white shadow-md shadow-accent/20 transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:bg-none disabled:bg-white disabled:text-text-muted disabled:shadow-none disabled:ring-1 disabled:ring-accent/15"
+            >
+              <Handshake className="h-4 w-4" />
+              제휴 신청 제출하기
+            </button>
+
+            {submitted && (
+              <p className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-bold text-green-700">
+                제휴 신청이 접수되었습니다. 담당자가 빠르게 연락드리겠습니다.
+              </p>
+            )}
+          </form>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PartnerPageLoading() {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center bg-white">
+      <div className="flex items-center gap-2 text-sm font-bold text-text-muted">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        계정 정보를 확인하는 중
+      </div>
+    </div>
+  );
+}
 
 /* ═══════════════════════════════════════════════
  * 통계 위젯
@@ -208,7 +473,7 @@ function DetailModal({ offer, onClose, onAction }: {
 /* ═══════════════════════════════════════════════
  * 페이지
  * ═══════════════════════════════════════════════ */
-export default function PartnerPage() {
+function AgentPartnerDashboard() {
   const { offers, updateStatus } = useOffers();
   const [tab, setTab] = useState<TabKey>("ALL");
   const [selected, setSelected] = useState<Offer | null>(null);
@@ -244,4 +509,18 @@ export default function PartnerPage() {
       {latest && <DetailModal offer={latest} onClose={() => setSelected(null)} onAction={handleAction} />}
     </div>
   );
+}
+
+export default function PartnerPage() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <PartnerPageLoading />;
+  }
+
+  if (user?.user_role === "AGENT") {
+    return <AgentPartnerDashboard />;
+  }
+
+  return <PartnerLandingPage />;
 }

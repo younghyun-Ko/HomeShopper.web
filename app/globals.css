@@ -4,11 +4,11 @@
 /* ── Tailwind v4 테마 설정 (기존 tailwind.config.ts 대체) ── */
 @theme {
   /* 1. 컬러 시스템 */
-  --color-primary: #1B2A4A;
-  --color-accent: #D4A853;
-  --color-background: #F8F7F4;
-  --color-text-main: #2D2D2D;
-  --color-text-muted: #9CA3AF;
+  --color-primary: #172243;
+  --color-accent: #315DFF;
+  --color-background: #F7FAFF;
+  --color-text-main: #22304A;
+  --color-text-muted: #8D9AAF;
 
   /* 2. 폰트 패밀리 */
   --font-sans: "Pretendard", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -36,6 +36,27 @@
 }
 
 @layer utilities {
+  .bg-brand-gradient {
+    background-image: linear-gradient(135deg, #2563ff 0%, #6657ff 100%);
+  }
+
+  .text-brand-gradient {
+    background-image: linear-gradient(135deg, #2563ff 0%, #6657ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .shadow-brand {
+    box-shadow: 0 14px 28px rgba(49, 93, 255, 0.22);
+  }
+
+  .ring-brand-soft {
+    box-shadow:
+      0 16px 32px rgba(49, 93, 255, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
   @keyframes gentle-bounce {
     0%, 100% {
       transform: translateY(0);
@@ -53,6 +74,39 @@
     .animate-gentle-bounce {
       animation: none;
     }
+  }
+
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+
+  .dot-pattern {
+    background-image: radial-gradient(rgba(49, 93, 255, 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .mesh-bg {
+    background-color: #f7faff;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(102, 87, 255, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(102, 87, 255, 0.05) 0px, transparent 50%);
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.8s ease-out forwards;
   }
 }
 
