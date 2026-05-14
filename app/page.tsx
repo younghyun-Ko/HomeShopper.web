@@ -521,9 +521,9 @@ interface PropertyItem {
 }
 
 const PROPERTIES: PropertyItem[] = [
-  { id: "p1", location: "전주시 덕진구 에코시티", title: "신축 메디컬타워", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", thumbnailUrl: "/prop-1.png", thumbnailVariant: "building", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
-  { id: "p2", location: "전주시 완산구 서신동", title: "대로변 1층 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", thumbnailUrl: "/prop-2.png", thumbnailVariant: "map", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
-  { id: "p3", location: "전주시 완산구 효자동", title: "대단지 아파트 단지내 상가", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", thumbnailUrl: "/prop-3.png", thumbnailVariant: "building", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
+  { id: "p1", location: "전주시 덕진구 에코시티", title: "전주 에코시티 신축 메디컬 빌딩", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", thumbnailUrl: "/offers/jeonju-ecocity-medical-building.png", thumbnailVariant: "building", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
+  { id: "p2", location: "전주시 완산구 서신동", title: "서신동 대로변 1층 코너 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", thumbnailUrl: "/offers/seosin-corner-1f.png", thumbnailVariant: "map", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
+  { id: "p3", location: "전주시 완산구 효자동", title: "효자동 단지 내 상가 소아과 적합", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", thumbnailUrl: "/offers/hyoja-pediatrics-complex.png", thumbnailVariant: "building", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
 ];
 
 function PropertyThumbnail({ property }: { property: PropertyItem }) {

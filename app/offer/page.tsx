@@ -108,7 +108,7 @@ const INITIAL_FILTERS: FilterState = {
 const LISTINGS: PropertyListing[] = [
   {
     id: "hs-101",
-    image: "/prop-1.png",
+    image: "/offers/gangnam-medical-tower-3f.png",
     title: "강남역 인근 메디컬 타워 3층",
     location: "서울시 강남구 역삼동",
     region: "서울시 강남구",
@@ -129,7 +129,7 @@ const LISTINGS: PropertyListing[] = [
   },
   {
     id: "hs-102",
-    image: "/hero-bg.png",
+    image: "/offers/jeonju-ecocity-medical-building.png",
     title: "전주 에코시티 신축 메디컬 빌딩",
     location: "전북 전주시 덕진구 에코시티",
     region: "전주시 덕진구 에코시티",
@@ -150,7 +150,7 @@ const LISTINGS: PropertyListing[] = [
   },
   {
     id: "hs-103",
-    image: "/prop-2.png",
+    image: "/offers/seosin-corner-1f.png",
     title: "서신동 대로변 1층 코너 상가",
     location: "전북 전주시 완산구 서신동",
     region: "전주시 완산구 서신동",
@@ -171,7 +171,7 @@ const LISTINGS: PropertyListing[] = [
   },
   {
     id: "hs-104",
-    image: "/prop-3.png",
+    image: "/offers/hyoja-pediatrics-complex.png",
     title: "효자동 단지 내 상가 소아과 적합",
     location: "전북 전주시 완산구 효자동",
     region: "전주시 완산구 효자동",
@@ -192,7 +192,7 @@ const LISTINGS: PropertyListing[] = [
   },
   {
     id: "hs-105",
-    image: "/prop-1.png",
+    image: "/offers/bundang-jeongja-medical-office-4f.png",
     title: "분당 정자동 메디컬 오피스 4층",
     location: "경기도 성남시 분당구 정자동",
     region: "경기도 성남시 분당구",
@@ -213,7 +213,7 @@ const LISTINGS: PropertyListing[] = [
   },
   {
     id: "hs-106",
-    image: "/hero-bg.png",
+    image: "/offers/hongdae-hapjeong-medical-2f.png",
     title: "홍대 합정 스트리트 메디컬 2층",
     location: "서울시 마포구 합정동",
     region: "서울시 마포구",
@@ -234,7 +234,7 @@ const LISTINGS: PropertyListing[] = [
   },
   {
     id: "hs-107",
-    image: "/prop-2.png",
+    image: "/offers/geumam-commercial-clinic-area.png",
     title: "금암동 병원가 인접 일반 상가",
     location: "전북 전주시 덕진구 금암동",
     region: "전주시 덕진구 에코시티",
@@ -255,7 +255,7 @@ const LISTINGS: PropertyListing[] = [
   },
   {
     id: "hs-108",
-    image: "/prop-3.png",
+    image: "/offers/seosin-mixed-use-5f.png",
     title: "서신동 신축 복합상가 5층",
     location: "전북 전주시 완산구 서신동",
     region: "전주시 완산구 서신동",
