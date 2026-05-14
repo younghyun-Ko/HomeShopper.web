@@ -363,6 +363,7 @@ export default function OfferPage() {
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
   const [selectedListing, setSelectedListing] = useState<PropertyListing | null>(null);
   const [offerRange, setOfferRange] = useState({ min: "", max: "" });
+  const [buildingTypesOpen, setBuildingTypesOpen] = useState(false);
 
   const filteredListings = useMemo(
     () => LISTINGS.filter((listing) => matchesFilters(listing, filters)),
@@ -570,27 +571,49 @@ export default function OfferPage() {
             </div>
 
             <fieldset>
-              <legend className="mb-3 text-sm font-black text-slate-900">건물 유형 *</legend>
-              <div className="grid grid-cols-2 gap-2">
-                {BUILDING_TYPE_OPTIONS.map((option) => {
-                  const selected = filters.buildingTypes.includes(option.value);
+              <button
+                type="button"
+                onClick={() => setBuildingTypesOpen((prev) => !prev)}
+                aria-expanded={buildingTypesOpen}
+                className="mb-3 flex w-full items-center justify-between gap-3 text-left text-sm font-black text-slate-900"
+              >
+                <span>
+                  건물 유형 *
+                  {filters.buildingTypes.length > 0 && (
+                    <span className="ml-2 text-xs font-bold text-blue-600">
+                      {filters.buildingTypes.length}개 선택
+                    </span>
+                  )}
+                </span>
+                <ChevronDown
+                  className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${
+                    buildingTypesOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
-                  return (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => toggleBuildingType(option.value)}
-                      className={`min-h-11 rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition ${
-                        selected
-                          ? "border-blue-400 bg-blue-50 text-blue-700"
-                          : "border-slate-200 text-slate-700 hover:border-slate-300"
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
-              </div>
+              {buildingTypesOpen && (
+                <div className="grid gap-2">
+                  {BUILDING_TYPE_OPTIONS.map((option) => {
+                    const selected = filters.buildingTypes.includes(option.value);
+
+                    return (
+                      <label
+                        key={option.value}
+                        className="flex min-h-8 cursor-pointer items-center gap-2 text-sm font-bold text-slate-700"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selected}
+                          onChange={() => toggleBuildingType(option.value)}
+                          className="h-4 w-4 shrink-0 rounded border-slate-300 accent-blue-600"
+                        />
+                        <span className="whitespace-nowrap">{option.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
             </fieldset>
 
             <div>
@@ -616,31 +639,15 @@ export default function OfferPage() {
             </div>
 
             <fieldset>
-              <legend className="mb-3 text-sm font-black text-slate-900">엘리베이터 유무 *</legend>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { value: true, label: "엘리베이터 필수" },
-                  { value: false, label: "상관없음" },
-                ].map((option) => (
-                  <button
-                    key={String(option.value)}
-                    type="button"
-                    onClick={() =>
-                      updateFilter(
-                        "elevatorRequired",
-                        filters.elevatorRequired === option.value ? null : option.value,
-                      )
-                    }
-                    className={`min-h-11 rounded-lg border px-3 py-2.5 text-sm font-bold transition ${
-                      filters.elevatorRequired === option.value
-                        ? "border-blue-400 bg-blue-50 text-blue-700"
-                        : "border-slate-200 text-slate-700 hover:border-slate-300"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+              <label className="flex min-h-8 cursor-pointer items-center gap-2 text-sm font-black text-slate-900">
+                <span className="whitespace-nowrap">엘레베이터 유무</span>
+                <input
+                  type="checkbox"
+                  checked={filters.elevatorRequired === true}
+                  onChange={(event) => updateFilter("elevatorRequired", event.target.checked ? true : null)}
+                  className="h-4 w-4 shrink-0 rounded border-slate-300 accent-blue-600"
+                />
+              </label>
             </fieldset>
           </div>
         </aside>
