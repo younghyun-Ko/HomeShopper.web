@@ -9,6 +9,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
+  ArrowRight,
+  BarChart3,
   Percent,
   ShieldCheck,
   Handshake,
@@ -24,9 +26,12 @@ import {
   Hospital,
   Landmark,
   MapPin,
+  Maximize2,
   Maximize,
   Banknote,
   X,
+  Check,
+  MessageCircle,
   Stethoscope,
   RefreshCw,
   Send,
@@ -518,12 +523,20 @@ interface PropertyItem {
   detail: string;
   thumbnailUrl?: string;
   thumbnailVariant: "map" | "building";
+  region: string;
+  currentPrice: number;
+  officialPrice: number;
+  marketPrice: number;
+  areaPyeong: number;
+  depositAmount: number;
+  features: string[];
+  moveInLabel: string;
 }
 
 const PROPERTIES: PropertyItem[] = [
-  { id: "p1", location: "전주시 덕진구 에코시티", title: "전주 에코시티 신축 메디컬 빌딩", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", thumbnailUrl: "/offers/jeonju-ecocity-medical-building.png", thumbnailVariant: "building", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
-  { id: "p2", location: "전주시 완산구 서신동", title: "서신동 대로변 1층 코너 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", thumbnailUrl: "/offers/seosin-corner-1f.png", thumbnailVariant: "map", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
-  { id: "p3", location: "전주시 완산구 효자동", title: "효자동 단지 내 상가 소아과 적합", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", thumbnailUrl: "/offers/hyoja-pediatrics-complex.png", thumbnailVariant: "building", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
+  { id: "p1", location: "전주시 덕진구 에코시티", title: "전주 에코시티 신축 메디컬 빌딩", recommend: "내과 / 이비인후과 추천", area: "전용 45평", deposit: "보증금 5,000만", rent: "월 350만", status: "상담가능", thumbnailUrl: "/offers/jeonju-ecocity-medical-building.png", thumbnailVariant: "building", region: "전주시 덕진구 에코시티", currentPrice: 11.2, officialPrice: 8.1, marketPrice: 10.5, areaPyeong: 45, depositAmount: 0.5, features: ["주차 50대", "엘리베이터 2대", "장애인 편의시설 완비", "배후 세대 4,500세대"], moveInLabel: "즉시 입주", detail: "2024년 준공된 신축 메디컬 전용 건물로, 엘리베이터 2기, 장애인 편의시설 완비. 에코시티 중심 상권에 위치하여 유동인구가 풍부하며, 주차장 80대 규모를 갖추고 있습니다. 내과·이비인후과 등 1차 진료과 개원에 최적화된 평면 구조입니다." },
+  { id: "p2", location: "전주시 완산구 서신동", title: "서신동 대로변 1층 코너 상가", recommend: "약국 / 치과 추천", area: "전용 32평", deposit: "보증금 7,000만", rent: "월 400만", status: "상담가능", thumbnailUrl: "/offers/seosin-corner-1f.png", thumbnailVariant: "map", region: "전주시 완산구 서신동", currentPrice: 9.5, officialPrice: 6.5, marketPrice: 8.8, areaPyeong: 32, depositAmount: 0.7, features: ["1층 코너", "대로변", "간판 노출 우수", "전용 32평"], moveInLabel: "1개월 이내", detail: "4차선 대로변 코너에 위치한 1층 상가로, 간판 노출도가 매우 우수합니다. 전면 유리 파사드로 시인성이 높고, 인근 대단지 아파트 배후 세대 약 3,000세대를 확보하고 있어 약국·치과 등 높은 유동인구를 필요로 하는 업종에 적합합니다." },
+  { id: "p3", location: "전주시 완산구 효자동", title: "효자동 단지 내 상가 소아과 적합", recommend: "소아과 추천", area: "전용 28평", deposit: "보증금 3,000만", rent: "월 200만", status: "매칭중", thumbnailUrl: "/offers/hyoja-pediatrics-complex.png", thumbnailVariant: "building", region: "전주시 완산구 효자동", currentPrice: 6, officialPrice: 4.2, marketPrice: 5.5, areaPyeong: 28, depositAmount: 0.3, features: ["단지 내 상권", "전용 28평", "유아 동선 적합", "주차 편리"], moveInLabel: "1개월 이내", detail: "효자동 대단지 아파트(1,200세대) 단지 내 상가 2층에 위치하며, 엘리베이터 직결 동선을 갖추고 있습니다. 단지 내 어린이집 2곳, 초등학교 1곳 인접으로 소아과 개원 시 안정적인 내원 환자 확보가 가능한 입지입니다." },
 ];
 
 function PropertyThumbnail({ property }: { property: PropertyItem }) {
@@ -574,9 +587,66 @@ function PropertyThumbnail({ property }: { property: PropertyItem }) {
   );
 }
 
+function formatNumber(raw: string): string {
+  const nums = raw.replace(/[^\d.]/g, "");
+  if (!nums) return "";
+  const parts = nums.split(".");
+  const integer = parts[0] ? Number(parts[0]).toLocaleString("ko-KR") : "";
+  return parts.length > 1 ? `${integer}.${parts.slice(1).join("").slice(0, 1)}` : integer;
+}
+
+function formatEok(value: number): string {
+  return Number.isInteger(value) ? `${value}억` : `${value.toFixed(1)}억`;
+}
+
+function PropertyPriceBar({ label, value, max, tone }: { label: string; value: number; max: number; tone: string }) {
+  const width = Math.max(8, Math.round((value / max) * 100));
+
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center justify-between text-xs">
+        <span className="font-medium text-slate-400">{label}</span>
+        <span className="font-black text-slate-700">{formatEok(value)}</span>
+      </div>
+      <div className="h-2.5 overflow-hidden rounded-full bg-slate-200">
+        <div className={`h-full rounded-full ${tone}`} style={{ width: `${width}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function OfferRangeInput({
+  value,
+  placeholder,
+  onChange,
+}: {
+  value: string;
+  placeholder: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      value={value}
+      placeholder={placeholder}
+      onChange={(event) => onChange(formatNumber(event.target.value))}
+      className="h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+    />
+  );
+}
+
 function PropertyPreviewSection() {
   const [modal, setModal] = useState<PropertyItem | null>(null);
+  const [offerRange, setOfferRange] = useState({ min: "", max: "" });
   const close = useCallback(() => setModal(null), []);
+  const canSubmitOffer = !!offerRange.min && !!offerRange.max;
+  const modalMaxPrice = modal ? Math.max(modal.currentPrice, modal.marketPrice, modal.officialPrice) : 1;
+
+  function openProperty(property: PropertyItem) {
+    setModal(property);
+    setOfferRange({ min: "", max: "" });
+  }
 
   useEffect(() => {
     if (!modal) return;
@@ -602,7 +672,7 @@ function PropertyPreviewSection() {
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {PROPERTIES.map((p) => (
-            <button key={p.id} onClick={() => setModal(p)} className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-primary/5 bg-white p-0 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
+            <button key={p.id} onClick={() => openProperty(p)} className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-primary/5 bg-white p-0 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
               <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-primary/5 bg-background">
                 <PropertyThumbnail property={p} />
                 <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-primary shadow-sm backdrop-blur-sm">
@@ -629,33 +699,147 @@ function PropertyPreviewSection() {
       </div>
 
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={close}>
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-          <div className="relative z-10 w-full max-w-lg rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-start justify-between border-b border-primary/10 px-6 py-5">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xl font-extrabold text-primary">{modal.title}</h3>
-                  <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${modal.status === "상담가능" ? "bg-accent/10 text-accent" : "bg-text-muted/10 text-text-muted"}`}>{modal.status}</span>
+        <div
+          className="fixed inset-0 z-[120] flex items-end justify-center bg-slate-950/45 px-0 sm:items-center sm:px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="home-listing-detail-title"
+          onClick={close}
+        >
+          <div
+            className="max-h-[94vh] w-full max-w-[670px] overflow-y-auto rounded-t-3xl bg-white shadow-2xl sm:rounded-3xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="relative overflow-hidden rounded-t-3xl bg-slate-200" style={{ height: 250 }}>
+              <Image
+                src={modal.thumbnailUrl ?? "/hero-bg.png"}
+                alt={modal.title}
+                fill
+                sizes="670px"
+                priority
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-slate-950/10" />
+              <span className="absolute left-5 top-5 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-black text-white">
+                {modal.status}
+              </span>
+              <button
+                type="button"
+                onClick={close}
+                aria-label="상세 보기 닫기"
+                className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-slate-900/55 text-white transition hover:bg-slate-900/75"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <p className="text-sm font-bold text-white/75">{modal.location}</p>
+                <h2 id="home-listing-detail-title" className="mt-1 text-2xl font-black leading-tight">
+                  {modal.title}
+                </h2>
+              </div>
+            </div>
+
+            <div className="space-y-7 p-6 sm:p-8">
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">
+                  <Maximize2 className="h-3.5 w-3.5" /> 전용 {modal.areaPyeong}평
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">
+                  <MapPin className="h-3.5 w-3.5" /> {modal.region}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-600">
+                  {modal.recommend}
+                </span>
+              </div>
+
+              <section className="rounded-2xl border border-blue-100 bg-slate-50 p-5">
+                <h3 className="mb-5 flex items-center gap-2 text-lg font-black text-slate-900">
+                  <BarChart3 className="h-5 w-5 text-blue-600" />
+                  가격 참고 지표
+                </h3>
+                <div className="space-y-4">
+                  <PropertyPriceBar
+                    label="공시지가"
+                    value={modal.officialPrice}
+                    max={modalMaxPrice}
+                    tone="bg-blue-400"
+                  />
+                  <PropertyPriceBar
+                    label="유사 실거래가"
+                    value={modal.marketPrice}
+                    max={modalMaxPrice}
+                    tone="bg-indigo-500"
+                  />
+                  <PropertyPriceBar
+                    label="현재 호가"
+                    value={modal.currentPrice}
+                    max={modalMaxPrice}
+                    tone="bg-violet-500"
+                  />
                 </div>
-                <p className="mt-1 flex items-center gap-1 text-sm text-text-muted"><MapPin className="h-3.5 w-3.5" />{modal.location}</p>
+                <p className="mt-4 text-xs font-medium text-slate-400">
+                  * 공시지가/실거래가는 참고용이며 실제 가치는 다를 수 있습니다.
+                </p>
+              </section>
+
+              <section>
+                <h3 className="text-lg font-black text-slate-900">매물 상세</h3>
+                <p className="mt-3 text-sm font-medium leading-7 text-slate-500">{modal.detail}</p>
+              </section>
+
+              <section>
+                <h3 className="text-lg font-black text-slate-900">주요 특징</h3>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {[...modal.features, modal.moveInLabel].map((feature) => (
+                    <span
+                      key={feature}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700"
+                    >
+                      <Check className="h-3.5 w-3.5" /> {feature}
+                    </span>
+                  ))}
+                </div>
+              </section>
+
+              <section className="rounded-2xl bg-blue-50/70 p-5">
+                <h3 className="flex items-center gap-2 text-lg font-black text-slate-900">
+                  <MessageCircle className="h-5 w-5 text-slate-500" />
+                  매수 희망 가격 입력
+                </h3>
+                <p className="mt-1 text-sm font-medium text-slate-400">
+                  해당 매물을 어느 정도 가격 범위에서 거래하고 싶으신가요?
+                </p>
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  <label>
+                    <span className="mb-2 block text-sm font-black text-slate-700">최소 금액 (억원)</span>
+                    <OfferRangeInput
+                      value={offerRange.min}
+                      placeholder="예: 30"
+                      onChange={(value) => setOfferRange((prev) => ({ ...prev, min: value }))}
+                    />
+                  </label>
+                  <label>
+                    <span className="mb-2 block text-sm font-black text-slate-700">최대 금액 (억원)</span>
+                    <OfferRangeInput
+                      value={offerRange.max}
+                      placeholder="예: 40"
+                      onChange={(value) => setOfferRange((prev) => ({ ...prev, max: value }))}
+                    />
+                  </label>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={!canSubmitOffer}
+                  className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-indigo-400 text-sm font-black text-white transition enabled:hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  해당 조건으로 제안하기 <ArrowRight className="h-4 w-4" />
+                </button>
+              </section>
               </div>
-              <button onClick={close} className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-primary/5 hover:text-primary"><X className="h-5 w-5" /></button>
-            </div>
-            <div className="px-6 py-5">
-              <div className="mb-4 flex items-center gap-1.5"><Stethoscope className="h-4 w-4 text-accent" /><span className="text-sm font-semibold text-accent">{modal.recommend}</span></div>
-              <div className="mb-5 grid grid-cols-3 gap-3">
-                <div className="rounded-xl bg-background p-3 text-center"><p className="text-[10px] font-medium text-text-muted">면적</p><p className="mt-0.5 text-sm font-bold text-primary">{modal.area.replace("전용 ", "")}</p></div>
-                <div className="rounded-xl bg-background p-3 text-center"><p className="text-[10px] font-medium text-text-muted">보증금</p><p className="mt-0.5 text-sm font-bold text-primary">{modal.deposit.replace("보증금 ", "")}</p></div>
-                <div className="rounded-xl bg-background p-3 text-center"><p className="text-[10px] font-medium text-text-muted">월세</p><p className="mt-0.5 text-sm font-bold text-primary">{modal.rent.replace("월 ", "")}</p></div>
-              </div>
-              <p className="text-sm leading-relaxed text-text-muted">{modal.detail}</p>
-            </div>
-            <div className="border-t border-primary/10 px-6 py-5">
-              <a href="#contact" onClick={close} className="block w-full rounded-xl bg-brand-gradient py-3.5 text-center text-sm font-bold text-white shadow-md shadow-accent/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30">이 매물 상담 신청하기</a>
             </div>
           </div>
-        </div>
       )}
     </section>
   );
