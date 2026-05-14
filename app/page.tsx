@@ -66,16 +66,17 @@ function HeroSection() {
           className="object-cover opacity-90 transition-transform duration-1000 hover:scale-105"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-background" />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-content text-center animate-fade-up">
-        <div className="glass mx-auto mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 shadow-lg">
+        <div className="glass mx-auto mb-1 inline-flex items-center gap-2 rounded-full px-4 py-1.5 shadow-lg">
           <Sparkles className="h-4 w-4 text-accent" />
           <p className="text-xs font-bold tracking-wide text-primary">성공적인 개원의 시작점</p>
         </div>
 
-        <h1 className="mx-auto mt-2 max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl drop-shadow-sm">
+        <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl drop-shadow-sm">
           리스크는 <span className="text-blue-400">AI</span>가 지우고,<br />
           수수료는 <span className="text-brand-gradient bg-clip-text text-transparent">홈쇼퍼</span>가 낮췄습니다.
         </h1>

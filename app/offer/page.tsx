@@ -708,18 +708,19 @@ export default function OfferPage() {
 
                     <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm">
                       <div className="grid gap-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-slate-400">공시지가</span>
-                          <span className="font-black text-slate-800">{formatEok(listing.officialPrice)}</span>
+                        <div className="grid grid-cols-[82px_1fr] items-start gap-2">
+                          <span className="whitespace-nowrap font-medium text-slate-400">공시지가</span>
+                          <span className="text-right font-black text-slate-800">{formatEok(listing.officialPrice)}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-slate-400">유사 실거래가</span>
-                          <span className="font-black text-slate-800">{formatEok(listing.marketPrice)}</span>
+                        <div className="grid grid-cols-[82px_1fr] items-start gap-2">
+                          <span className="whitespace-nowrap font-medium text-slate-400">유사 실거래가</span>
+                          <span className="text-right font-black text-slate-800">{formatEok(listing.marketPrice)}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-slate-400">면적 / 보증금</span>
-                          <span className="font-black text-slate-800">
-                            전용 {listing.areaPyeong}평 / 보증금 {formatEok(listing.deposit)}
+                        <div className="grid grid-cols-[82px_1fr] items-start gap-2">
+                          <span className="whitespace-nowrap font-medium text-slate-400">면적/보증금</span>
+                          <span className="text-right text-[13px] font-black leading-snug text-slate-800">
+                            <span className="block">전용 {listing.areaPyeong}평</span>
+                            <span className="block">보증금 {formatEok(listing.deposit)}</span>
                           </span>
                         </div>
                       </div>
