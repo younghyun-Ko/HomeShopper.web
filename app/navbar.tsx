@@ -241,6 +241,7 @@ export default function Navbar() {
   const { user, loading, logout } = useAuth();
   const [activeSection, setActiveSection] = useState("");
   const [authOpen, setAuthOpen] = useState(false);
+  const showPartnerLink = user?.user_role !== "AGENT";
 
   useEffect(() => {
     const sections = NAV_LINKS.map((link) =>
@@ -348,17 +349,19 @@ export default function Navbar() {
               마이페이지
             </button>
 
-            <Link
-              href="/partner"
-              aria-current={pathname === "/partner" ? "page" : undefined}
-              className={`shrink-0 text-sm transition-colors hover:text-primary ${
-                pathname === "/partner"
-                  ? "font-bold text-accent underline decoration-2 underline-offset-8"
-                  : "font-medium text-text-muted"
-              }`}
-            >
-              중개사 제휴
-            </Link>
+            {showPartnerLink && (
+              <Link
+                href="/partner"
+                aria-current={pathname === "/partner" ? "page" : undefined}
+                className={`shrink-0 text-sm transition-colors hover:text-primary ${
+                  pathname === "/partner"
+                    ? "font-bold text-accent underline decoration-2 underline-offset-8"
+                    : "font-medium text-text-muted"
+                }`}
+              >
+                중개사 제휴
+              </Link>
+            )}
 
             {!loading && user ? (
               <div className="flex shrink-0 items-center gap-2">
